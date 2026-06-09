@@ -55,7 +55,7 @@ Docker Compose.
 ### 1\. Клонирование
 
 ```bash
-git clone https://github.com/<your-username>/telegram-store-bot.git
+git clone https://github.com/txltedxgod/telegram-store-bot.git
 cd telegram-store-bot
 ```
 
