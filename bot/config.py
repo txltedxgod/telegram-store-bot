@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     """Strongly-typed settings sourced from environment variables."""
 
     # Telegram
-    bot_token: str
+    bot_token: str = ""
     admin_ids: list[int] = []
 
     # PostgreSQL

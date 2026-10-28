@@ -23,5 +23,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Test Suite
+        env:
+          BOT_TOKEN: "123456789:AAETestTokenForGithubActionsCI123456"
+          DATABASE_URL: "sqlite+aiosqlite:///:memory:"
         run: |
           pytest -v
