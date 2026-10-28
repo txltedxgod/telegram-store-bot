@@ -34,8 +34,8 @@ EMOJI_TAG = "5296348778012361146"          # 🏷 Promo Tag
 EMOJI_CHAT = "5258215846450305872"         # 💬 Comment / Chat
 EMOJI_INFO = "5258503720928288433"         # ℹ️ Info / Warning
 EMOJI_DIAMOND = "5280962371207077415"      # 💎 Diamond
-EMOJI_UA = "5339348629075279930"           # 🇺🇦 Ukraine Flag
-EMOJI_UK = "5202196682497859879"           # 🇬🇧 UK Flag
+EMOJI_UA = "5447309366568953338"           # 🇺🇦 Ukraine Flag (RestrictedEmoji - same pack as Britain)
+EMOJI_UK = "5202196682497859879"           # 🇬🇧 UK Flag (RestrictedEmoji)
 EMOJI_CHAIN = "5260730055880876557"        # 🔗 / ⛓ Link / Chain
 
 

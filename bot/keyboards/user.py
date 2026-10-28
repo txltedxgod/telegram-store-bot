@@ -34,6 +34,8 @@ from bot.utils.emojis import (
     EMOJI_SHIELD,
     EMOJI_STAR,
     EMOJI_STORE,
+    EMOJI_UA,
+    EMOJI_UK,
 )
 from bot.utils.texts import money, status_label
 
@@ -55,8 +57,16 @@ def get_category_custom_emoji(name: str) -> str:
 
 def language_selection_kb() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="🇺🇦 Українська", callback_data=LanguageCB(code="uk"))
-    kb.button(text="🇬🇧 English", callback_data=LanguageCB(code="en"))
+    kb.button(
+        text="🇺🇦 Українська",
+        callback_data=LanguageCB(code="uk"),
+        icon_custom_emoji_id=EMOJI_UA,
+    )
+    kb.button(
+        text="🇬🇧 English",
+        callback_data=LanguageCB(code="en"),
+        icon_custom_emoji_id=EMOJI_UK,
+    )
     kb.adjust(2)
     return kb.as_markup()
 

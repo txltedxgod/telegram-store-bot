@@ -16,6 +16,8 @@ def test_language_selection_keyboard():
     button_texts = [btn.text for row in kb.inline_keyboard for btn in row]
     assert "🇺🇦 Українська" in button_texts
     assert "🇬🇧 English" in button_texts
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
+    assert kb.inline_keyboard[0][1].icon_custom_emoji_id is not None
 
 
 def test_main_menu_keyboard_uk():

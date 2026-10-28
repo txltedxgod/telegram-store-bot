@@ -13,21 +13,14 @@ USER_ID = 36038634
 
 async def main():
     bot = Bot(token=BOT_TOKEN)
-    test_ids = {
-        "WAVE_Restricted": "5472055112702629499",
-        "HAND_tgmacicons": "5258362429389152256",
-        "CLAP_tgmacicons": "5258501105293205250",
-        "PHONE_Restricted": "5407025283456835913",
-        "PHONE_tgmacicons": "5258020476977946656",
-        "PROFILE_tgmacicons": "5258362837411045098",
-    }
-    for name, doc_id in test_ids.items():
-        try:
-            m = await bot.send_message(USER_ID, f"Test {name}: <tg-emoji emoji-id=\"{doc_id}\">👋</tg-emoji>", parse_mode="HTML")
-            await bot.delete_message(USER_ID, m.message_id)
-            print(f"[VALID] {name}: {doc_id}")
-        except Exception as e:
-            print(f"[INVALID] {name}: {doc_id} -> {e}")
+    ua_doc = "5447309366568953338"  # RestrictedEmoji UA
+    uk_doc = "5202196682497859879"  # RestrictedEmoji UK
+    try:
+        m = await bot.send_message(USER_ID, f"Test: <tg-emoji emoji-id=\"{ua_doc}\">🇺🇦</tg-emoji> and <tg-emoji emoji-id=\"{uk_doc}\">🇬🇧</tg-emoji>", parse_mode="HTML")
+        await bot.delete_message(USER_ID, m.message_id)
+        print(f"[VALID] Both from RestrictedEmoji! UA: {ua_doc}, UK: {uk_doc}")
+    except Exception as e:
+        print(f"[INVALID] {e}")
     await bot.session.close()
 
 if __name__ == "__main__":
