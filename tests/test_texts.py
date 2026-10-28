@@ -25,7 +25,7 @@ def test_welcome_text_uk():
         balance=Decimal("500.00"),
     )
     text = welcome_text(user)
-    assert "SEO STORE • Цифровий Маркетплейс" in text
+    assert "SEO Store" in text
     assert "Alice" in text
     assert "500 ₴" in text
 
@@ -38,7 +38,7 @@ def test_welcome_text_en():
         balance=Decimal("1000.00"),
     )
     text = welcome_text(user)
-    assert "SEO STORE • Digital Marketplace" in text
+    assert "SEO Store" in text
     assert "Bob" in text
     assert "1\u202f000 ₴" in text
 

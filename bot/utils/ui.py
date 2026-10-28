@@ -33,13 +33,16 @@ async def render_menu_step(
             await msg.answer(text, reply_markup=reply_markup, parse_mode="HTML")
 
 
+_MEDIA_CACHE: dict[str, str] = {}
+
+
 async def render_animation_step(
     query: CallbackQuery,
     gif_path: Path,
     caption: str,
     reply_markup: InlineKeyboardMarkup | None = None,
 ) -> None:
-    """Renders or replaces message with an animated GIF."""
+    """Renders or replaces message with an animated GIF/video, using file_id cache for speed."""
     msg = query.message
     if not msg:
         return
@@ -49,14 +52,35 @@ async def render_animation_step(
     except Exception:
         pass
 
-    if gif_path.exists():
+    path_key = str(gif_path)
+    cached_id = _MEDIA_CACHE.get(path_key)
+
+    if cached_id:
         try:
             await msg.answer_animation(
-                FSInputFile(str(gif_path)),
+                cached_id,
                 caption=caption,
                 reply_markup=reply_markup,
                 parse_mode="HTML",
             )
+            return
+        except Exception:
+            _MEDIA_CACHE.pop(path_key, None)
+
+    if gif_path.exists():
+        try:
+            sent = await msg.answer_animation(
+                FSInputFile(path_key),
+                caption=caption,
+                reply_markup=reply_markup,
+                parse_mode="HTML",
+            )
+            if sent and sent.animation:
+                _MEDIA_CACHE[path_key] = sent.animation.file_id
+            elif sent and sent.document:
+                _MEDIA_CACHE[path_key] = sent.document.file_id
+            elif sent and sent.video:
+                _MEDIA_CACHE[path_key] = sent.video.file_id
             return
         except Exception:
             pass

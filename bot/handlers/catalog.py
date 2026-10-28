@@ -57,12 +57,12 @@ async def show_catalog(query: CallbackQuery, session: AsyncSession, user: User) 
     icon_catalog = ce(EMOJI_CATALOG, "🛍")
     if lang == "en":
         caption = (
-            f"{icon_catalog} <b>SEO Store Digital Catalog</b>\n\n"
+            f"{icon_catalog} <b>SEO Store</b>\n\n"
             f"Select a category below to browse items:"
         )
     else:
         caption = (
-            f"{icon_catalog} <b>Каталог товарів SEO Store</b>\n\n"
+            f"{icon_catalog} <b>SEO Store</b>\n\n"
             f"Оберіть категорію для перегляду товарів:"
         )
 

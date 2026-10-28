@@ -29,6 +29,7 @@ router = Router(name="start")
 ASSETS_DIR = Path(__file__).resolve().parent.parent.parent / "assets"
 WELCOME_MP4_PATH = ASSETS_DIR / "welcome.mp4"
 WELCOME_GIF_PATH = ASSETS_DIR / "welcome.gif"
+_WELCOME_FILE_ID: str | None = None
 
 
 def get_welcome_media_path() -> Path | None:
@@ -58,6 +59,7 @@ async def _apply_referral(
 
 
 async def _send_welcome(message: Message, user: User) -> None:
+    global _WELCOME_FILE_ID
     # If user hasn't chosen language yet, ask first
     if not user.language_code:
         await message.answer(
@@ -70,14 +72,31 @@ async def _send_welcome(message: Message, user: User) -> None:
     text = welcome_text(user)
     lang = get_lang(user)
     media_path = get_welcome_media_path()
-    if media_path:
+
+    if _WELCOME_FILE_ID:
         try:
             await message.answer_animation(
+                _WELCOME_FILE_ID,
+                caption=text,
+                reply_markup=main_menu(lang),
+                parse_mode="HTML",
+            )
+            return
+        except Exception:
+            _WELCOME_FILE_ID = None
+
+    if media_path:
+        try:
+            sent = await message.answer_animation(
                 FSInputFile(str(media_path)),
                 caption=text,
                 reply_markup=main_menu(lang),
                 parse_mode="HTML",
             )
+            if sent and sent.animation:
+                _WELCOME_FILE_ID = sent.animation.file_id
+            elif sent and sent.document:
+                _WELCOME_FILE_ID = sent.document.file_id
             return
         except Exception as e:
             logger.warning("Failed to send welcome animation: %s", e)

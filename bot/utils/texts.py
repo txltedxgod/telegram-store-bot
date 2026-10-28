@@ -67,7 +67,7 @@ def fmt_date(value: datetime | None) -> str:
 
 def language_prompt_text() -> str:
     return (
-        f"{ce(EMOJI_LIGHTNING, '⚡️')} <b>SEO STORE • Digital Goods</b>\n\n"
+        f"{ce(EMOJI_LIGHTNING, '⚡️')} <b>SEO Store</b>\n\n"
         f"🌐 <b>Оберіть мову інтерфейсу:</b>\n"
         f"Please choose your preferred language below:"
     )
@@ -83,7 +83,7 @@ def welcome_text(user: User) -> str:
 
     if lang == "en":
         return (
-            f"{icon_lightning} <b>SEO STORE • Digital Marketplace</b>\n\n"
+            f"{icon_lightning} <b>SEO Store</b>\n\n"
             f"👋 Welcome, <b>{name}</b>!\n\n"
             f"{icon_coin} Your balance: <b>{money(user.balance)}</b>\n"
             f"{icon_star} Catalog: <b>Telegram Premium, AI, VPN, Steam, Software</b>\n"
@@ -92,7 +92,7 @@ def welcome_text(user: User) -> str:
         )
 
     return (
-        f"{icon_lightning} <b>SEO STORE • Цифровий Маркетплейс</b>\n\n"
+        f"{icon_lightning} <b>SEO Store</b>\n\n"
         f"👋 Привіт, <b>{name}</b>!\n\n"
         f"{icon_coin} Ваш баланс: <b>{money(user.balance)}</b>\n"
         f"{icon_star} Каталог: <b>Telegram Premium, AI, VPN, Steam, Софт</b>\n"

@@ -59,6 +59,10 @@ async def on_startup(bot: Bot) -> None:
             if created:
                 logger.info("Seeded demo categories and products")
     await set_commands(bot)
+    try:
+        await bot.set_my_name("SEO Store")
+    except Exception as e:
+        logger.warning("Could not set bot name: %s", e)
     me = await bot.get_me()
     logger.info("Bot @%s started", me.username)
 
