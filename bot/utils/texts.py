@@ -1,75 +1,170 @@
-"""User-facing text builders and formatting helpers (Russian locale)."""
+"""User-facing text builders with Ukrainian (default) and English localization,
+dual UAH/USD currency formatting, and Telegram custom premium emojis.
+"""
 from __future__ import annotations
 
 from datetime import datetime
 from decimal import Decimal
 from typing import Iterable
 
-from bot.config import settings
 from bot.database.models import CartItem, Order, OrderStatus, Product, User
+from bot.utils.emojis import (
+    EMOJI_CHECK,
+    EMOJI_COIN,
+    EMOJI_GIFT,
+    EMOJI_LIGHTNING,
+    EMOJI_LOCK,
+    EMOJI_PROFILE,
+    EMOJI_ROBOT,
+    EMOJI_STAR,
+    EMOJI_STORE,
+    ce,
+)
 
-STATUS_LABELS: dict[OrderStatus, str] = {
-    OrderStatus.pending: "⏳ Ожидает оплаты",
-    OrderStatus.paid: "💳 Оплачен (в обработке)",
-    OrderStatus.completed: "✅ Успешно выполнен",
-    OrderStatus.cancelled: "❌ Отменён",
+# Exchange rate: 1 USD ~ 41.5 UAH
+UAH_TO_USD_RATE = Decimal("41.5")
+
+STATUS_LABELS_UK: dict[OrderStatus, str] = {
+    OrderStatus.pending: "⏳ Очікує оплати",
+    OrderStatus.paid: "💳 Оплачено (в обробці)",
+    OrderStatus.completed: "✅ Успішно виконано",
+    OrderStatus.cancelled: "❌ Скасовано",
+}
+
+STATUS_LABELS_EN: dict[OrderStatus, str] = {
+    OrderStatus.pending: "⏳ Pending Payment",
+    OrderStatus.paid: "💳 Paid (Processing)",
+    OrderStatus.completed: "✅ Completed",
+    OrderStatus.cancelled: "❌ Cancelled",
 }
 
 
+def get_lang(user: User | None) -> str:
+    if user and getattr(user, "language_code", None) in ("uk", "en"):
+        return user.language_code
+    return "uk"
+
+
 def money(value: Decimal | int | float | None) -> str:
-    """Format a monetary value like '12 500 ₽'."""
-    amount = Decimal(str(value or 0))
-    whole = int(amount.to_integral_value())
-    formatted = f"{whole:,}".replace(",", "\u202f")
-    return f"{formatted} {settings.currency}"
+    """Format price in UAH (₴) and USD ($), e.g. '1 150 ₴ ($27.71)'."""
+    uah = Decimal(str(value or 0))
+    whole = int(uah.to_integral_value())
+    formatted_uah = f"{whole:,}".replace(",", "\u202f")
+    usd = (uah / UAH_TO_USD_RATE).quantize(Decimal("0.01"))
+    return f"{formatted_uah} ₴ (${usd:.2f})"
 
 
-def status_label(status: OrderStatus) -> str:
-    return STATUS_LABELS.get(status, str(status))
+def status_label(status: OrderStatus, lang: str = "uk") -> str:
+    labels = STATUS_LABELS_EN if lang == "en" else STATUS_LABELS_UK
+    return labels.get(status, str(status))
 
 
 def fmt_date(value: datetime | None) -> str:
     if not value:
         return "—"
-    return value.strftime("%d.%m.%Y в %H:%M")
+    return value.strftime("%d.%m.%Y %H:%M")
+
+
+def language_prompt_text() -> str:
+    return (
+        f"{ce(EMOJI_LIGHTNING, '⚡️')} <b>SEO STORE • Digital Goods</b>\n"
+        f"────────────────────────\n"
+        f"🌐 <b>Оберіть мову інтерфейсу:</b>\n"
+        f"Please choose your preferred language below:\n"
+        f"────────────────────────"
+    )
 
 
 def welcome_text(user: User) -> str:
-    name = user.full_name or "покупатель"
+    lang = get_lang(user)
+    name = user.full_name or ("customer" if lang == "en" else "покупець")
+    icon_lightning = ce(EMOJI_LIGHTNING, "⚡️")
+    icon_coin = ce(EMOJI_COIN, "🪙")
+    icon_star = ce(EMOJI_STAR, "💎")
+    icon_lock = ce(EMOJI_LOCK, "🔒")
+
+    if lang == "en":
+        return (
+            f"{icon_lightning} <b>SEO STORE • Digital Marketplace</b>\n"
+            f"────────────────────────\n"
+            f"👋 Welcome, <b>{name}</b>!\n\n"
+            f"{icon_coin} Your balance: <b>{money(user.balance)}</b>\n"
+            f"{icon_star} Catalog: <b>Telegram Premium, AI, VPN, Steam, Software</b>\n"
+            f"{icon_lock} Instant 24/7 automated delivery\n"
+            f"────────────────────────\n"
+            f"Choose a section from the menu below ⬇️"
+        )
+
     return (
-        f"⚡️ <b>SEO STORE • Цифровой Маркетплейс</b>\n"
+        f"{icon_lightning} <b>SEO STORE • Цифровий Маркетплейс</b>\n"
         f"────────────────────────\n"
-        f"👋 Привет, <b>{name}</b>!\n\n"
-        f"💳 Ваш баланс: <b>{money(user.balance)}</b>\n"
-        f"💎 Каталог: <b>Telegram Premium, AI, VPN, Steam, Soft</b>\n"
-        f"🔒 Моментальная автоматическая выдача 24/7\n"
+        f"👋 Привіт, <b>{name}</b>!\n\n"
+        f"{icon_coin} Ваш баланс: <b>{money(user.balance)}</b>\n"
+        f"{icon_star} Каталог: <b>Telegram Premium, AI, VPN, Steam, Софт</b>\n"
+        f"{icon_lock} Автоматична моментальна видача 24/7\n"
         f"────────────────────────\n"
-        f"Выберите интересующий раздел в меню ниже ⬇️"
+        f"Оберіть необхідний розділ у меню нижче ⬇️"
     )
 
 
-def product_card(product: Product) -> str:
+def product_card(product: Product, user: User | None = None) -> str:
+    lang = get_lang(user)
+    icon_lock = ce(EMOJI_LOCK, "🔒")
+    icon_star = ce(EMOJI_STAR, "⭐️")
+
+    if lang == "en":
+        stock_line = (
+            f"In stock: <b>{product.stock} pcs.</b>"
+            if product.in_stock
+            else "<b>⚠️ Out of stock</b>"
+        )
+        return (
+            f"<b>{product.name}</b>\n"
+            f"────────────────────────\n"
+            f"💰 Price: <b>{money(product.price)}</b>\n"
+            f"📦 {stock_line}\n\n"
+            f"<b>Description:</b>\n"
+            f"{product.description or '—'}\n"
+            f"────────────────────────\n"
+            f"{icon_lock} <i>Quality guaranteed with automated instant delivery</i>"
+        )
+
     stock_line = (
-        f"В наличии: <b>{product.stock} шт.</b>"
+        f"В наявності: <b>{product.stock} шт.</b>"
         if product.in_stock
-        else "<b>⚠️ Нет в наличии</b>"
+        else "<b>⚠️ Немає в наявності</b>"
     )
-    description = product.description or "—"
     return (
         f"<b>{product.name}</b>\n"
         f"────────────────────────\n"
-        f"💰 Стоимость: <b>{money(product.price)}</b>\n"
+        f"💰 Вартість: <b>{money(product.price)}</b>\n"
         f"📦 {stock_line}\n\n"
-        f"<b>Описание товара:</b>\n"
-        f"{description}\n"
+        f"<b>Опис товару:</b>\n"
+        f"{product.description or '—'}\n"
         f"────────────────────────\n"
-        f"🔒 <i>Гарантия качества и автоматическая выдача</i>"
+        f"{icon_lock} <i>Гарантія якості та автоматична видача</i>"
     )
 
 
-def cart_text(items: Iterable[CartItem], total: Decimal) -> str:
+def cart_text(items: Iterable[CartItem], total: Decimal, user: User | None = None) -> str:
+    lang = get_lang(user)
+    if lang == "en":
+        lines = [
+            "🧺 <b>Shopping Cart</b>\n"
+            "────────────────────────"
+        ]
+        for item in items:
+            subtotal = Decimal(item.product.price) * item.quantity
+            lines.append(
+                f"• <b>{item.product.name}</b>\n"
+                f"  {item.quantity} pcs × {money(item.product.price)} = <b>{money(subtotal)}</b>"
+            )
+        lines.append("────────────────────────")
+        lines.append(f"Total to pay: <b>{money(total)}</b>")
+        return "\n".join(lines)
+
     lines = [
-        "🧺 <b>Ваша корзина покупок</b>\n"
+        "🧺 <b>Кошик замовлень</b>\n"
         "────────────────────────"
     ]
     for item in items:
@@ -79,31 +174,75 @@ def cart_text(items: Iterable[CartItem], total: Decimal) -> str:
             f"  {item.quantity} шт. × {money(item.product.price)} = <b>{money(subtotal)}</b>"
         )
     lines.append("────────────────────────")
-    lines.append(f"Итого к оплате: <b>{money(total)}</b>")
+    lines.append(f"Разом до сплати: <b>{money(total)}</b>")
     return "\n".join(lines)
 
 
 def profile_text(user: User, orders_count: int, total_spent: Decimal) -> str:
+    lang = get_lang(user)
     username = f"@{user.username}" if user.username else "—"
+    icon_profile = ce(EMOJI_PROFILE, "👤")
+    icon_coin = ce(EMOJI_COIN, "🪙")
+
+    if lang == "en":
+        return (
+            f"{icon_profile} <b>Customer Profile</b>\n"
+            "────────────────────────\n"
+            f"🆔 Telegram ID: <code>{user.telegram_id}</code>\n"
+            f"📱 Username: {username}\n"
+            f"🌐 Language: <b>{'🇺🇦 Українська' if user.language_code == 'uk' else '🇬🇧 English'}</b>\n"
+            f"📅 Registered: {fmt_date(user.created_at)}\n\n"
+            f"{icon_coin} Account Balance: <b>{money(user.balance)}</b>\n"
+            f"📦 Completed Orders: <b>{orders_count}</b>\n"
+            f"💸 Total Spent: <b>{money(total_spent)}</b>\n"
+            "────────────────────────\n"
+            "<i>Top up your balance and earn bonuses by referring friends!</i>"
+        )
+
     return (
-        "👤 <b>Личный кабинет</b>\n"
+        f"{icon_profile} <b>Особистий кабінет</b>\n"
         "────────────────────────\n"
         f"🆔 Telegram ID: <code>{user.telegram_id}</code>\n"
-        f"📱 Никнейм: {username}\n"
-        f"📅 С нами с: {fmt_date(user.created_at)}\n\n"
-        f"💳 Баланс счёта: <b>{money(user.balance)}</b>\n"
-        f"📦 Оформлено заказов: <b>{orders_count}</b>\n"
-        f"💸 Всего покупок на: <b>{money(total_spent)}</b>\n"
+        f"📱 Юзернейм: {username}\n"
+        f"🌐 Мова: <b>{'🇺🇦 Українська' if user.language_code == 'uk' else '🇬🇧 English'}</b>\n"
+        f"📅 З нами з: {fmt_date(user.created_at)}\n\n"
+        f"{icon_coin} Баланс рахунку: <b>{money(user.balance)}</b>\n"
+        f"📦 Оформлено замовлень: <b>{orders_count}</b>\n"
+        f"💸 Загальна сума покупок: <b>{money(total_spent)}</b>\n"
         "────────────────────────\n"
-        "<i>Пополняйте баланс и получайте бонусы за приглашение друзей!</i>"
+        "<i>Поповнюйте баланс та отримуйте бонуси за запрошення друзів!</i>"
     )
 
 
-def order_card(order: Order) -> str:
+def order_card(order: Order, user: User | None = None) -> str:
+    lang = get_lang(user)
+    if lang == "en":
+        lines = [
+            f"📦 <b>Order #{order.id}</b>\n"
+            f"────────────────────────\n",
+            f"📊 Status: <b>{status_label(order.status, 'en')}</b>",
+            f"📅 Date: {fmt_date(order.created_at)}\n",
+        ]
+        for item in order.items:
+            lines.append(
+                f"• {item.product_name} ×{item.quantity} — <b>{money(item.subtotal)}</b>"
+            )
+        if order.discount and Decimal(order.discount) > 0:
+            lines.append(f"\n🏷 Promo code discount: −{money(order.discount)}")
+        lines.append("\n────────────────────────")
+        lines.append(f"Total: <b>{money(order.total_price)}</b>")
+        if order.payment_method:
+            lines.append(f"💳 Payment method: <b>{order.payment_method}</b>")
+        if order.contact:
+            lines.append(f"\n📞 Contact: <code>{order.contact}</code>")
+        if order.comment:
+            lines.append(f"💬 Comment: {order.comment}")
+        return "\n".join(lines)
+
     lines = [
-        f"📦 <b>Заказ #{order.id}</b>\n"
+        f"📦 <b>Замовлення #{order.id}</b>\n"
         f"────────────────────────\n",
-        f"📊 Статус: <b>{status_label(order.status)}</b>",
+        f"📊 Статус: <b>{status_label(order.status, 'uk')}</b>",
         f"📅 Дата: {fmt_date(order.created_at)}\n",
     ]
     for item in order.items:
@@ -111,11 +250,13 @@ def order_card(order: Order) -> str:
             f"• {item.product_name} ×{item.quantity} — <b>{money(item.subtotal)}</b>"
         )
     if order.discount and Decimal(order.discount) > 0:
-        lines.append(f"\n🏷 Скидка по промокоду: −{money(order.discount)}")
+        lines.append(f"\n🏷 Знижка за промокодом: −{money(order.discount)}")
     lines.append("\n────────────────────────")
-    lines.append(f"Итого: <b>{money(order.total_price)}</b>")
+    lines.append(f"Разом: <b>{money(order.total_price)}</b>")
+    if order.payment_method:
+        lines.append(f"💳 Спосіб оплати: <b>{order.payment_method}</b>")
     if order.contact:
-        lines.append(f"\n📞 Контакт для связи: <code>{order.contact}</code>")
+        lines.append(f"\n📞 Контакт для зв'язку: <code>{order.contact}</code>")
     if order.comment:
-        lines.append(f"💬 Комментарий: {order.comment}")
+        lines.append(f"💬 Коментар: {order.comment}")
     return "\n".join(lines)

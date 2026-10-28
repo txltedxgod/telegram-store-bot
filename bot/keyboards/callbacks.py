@@ -5,8 +5,12 @@ from aiogram.filters.callback_data import CallbackData
 
 
 class MenuCB(CallbackData, prefix="menu"):
-    # catalog | cart | orders | profile | favorites | search | home
+    # catalog | cart | orders | profile | favorites | search | home | language
     action: str
+
+
+class LanguageCB(CallbackData, prefix="lang"):
+    code: str  # "uk" | "en"
 
 
 class CategoryCB(CallbackData, prefix="cat"):
@@ -29,7 +33,8 @@ class OrderCB(CallbackData, prefix="order"):
 
 
 class CheckoutCB(CallbackData, prefix="checkout"):
-    action: str  # confirm | cancel | skip
+    action: str  # confirm | cancel | skip | pay_method
+    method: str = ""
 
 
 class FavoriteCB(CallbackData, prefix="fav"):

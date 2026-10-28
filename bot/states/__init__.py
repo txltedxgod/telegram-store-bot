@@ -7,6 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 class CheckoutSG(StatesGroup):
     """Order checkout flow."""
 
+    payment_method = State()
     contact = State()
     comment = State()
     confirm = State()
@@ -48,13 +49,3 @@ class SearchSG(StatesGroup):
     """User: search products by name."""
 
     query = State()
-
-
-__all__ = [
-    "CheckoutSG",
-    "AddProductSG",
-    "EditProductSG",
-    "BroadcastSG",
-    "PromocodeSG",
-    "SearchSG",
-]

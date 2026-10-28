@@ -26,3 +26,8 @@ async def get_or_create_category(
         session.add(category)
         await session.flush()
     return category
+
+
+# Convenient aliases
+get_all = list_categories
+create = get_or_create_category

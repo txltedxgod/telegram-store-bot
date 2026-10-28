@@ -24,6 +24,17 @@ async def get_product(session: AsyncSession, product_id: int) -> Product | None:
     return await session.get(Product, product_id)
 
 
+async def get_by_name_and_category(
+    session: AsyncSession, name: str, category_id: int
+) -> Product | None:
+    result = await session.execute(
+        select(Product).where(
+            Product.name == name, Product.category_id == category_id
+        )
+    )
+    return result.scalar_one_or_none()
+
+
 async def list_all(session: AsyncSession) -> list[Product]:
     result = await session.execute(select(Product).order_by(Product.id))
     return list(result.scalars().all())
@@ -38,6 +49,9 @@ async def search(session: AsyncSession, query: str) -> list[Product]:
         .limit(25)
     )
     return list(result.scalars().all())
+
+
+search_products = search
 
 
 async def create_product(
@@ -59,6 +73,9 @@ async def create_product(
     session.add(product)
     await session.flush()
     return product
+
+
+create = create_product
 
 
 async def delete_product(session: AsyncSession, product: Product) -> None:

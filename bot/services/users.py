@@ -72,6 +72,14 @@ async def set_referrer(
     return True
 
 
+async def set_language(
+    session: AsyncSession, user: User, language_code: str
+) -> None:
+    """Update user interface language ('uk' or 'en')."""
+    user.language_code = language_code
+    await session.flush()
+
+
 async def add_balance(
     session: AsyncSession, user: User, amount: Decimal | int
 ) -> None:

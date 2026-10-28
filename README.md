@@ -7,145 +7,149 @@
 <p align="center">
   <a href="https://github.com/txltedxgod/telegram-store-bot/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/txltedxgod/telegram-store-bot/ci.yml?branch=main&label=CI&style=for-the-badge&logo=github" alt="CI"></a>
   <a href="https://t.me/seostrbot"><img src="https://img.shields.io/badge/Live_Demo-@seostrbot-2ba2da?style=for-the-badge&logo=telegram" alt="Live Demo"></a>
+  <img src="https://img.shields.io/badge/Language-🇺🇦_UK_%7C_🇬🇧_EN-blue?style=for-the-badge" alt="Localization">
+  <img src="https://img.shields.io/badge/Currency-₴_UAH_%7C_$_USD-success?style=for-the-badge" alt="Currency">
   <img src="https://img.shields.io/badge/Python-3.12%20|%203.14-3776ab?style=for-the-badge&logo=python" alt="Python Version">
   <img src="https://img.shields.io/badge/aiogram-3.31.0-blue?style=for-the-badge&logo=telegram" alt="aiogram 3">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
 </p>
 
 ---
 
-## 🎮 Живое демо в Telegram
+## 🎮 Живе демо в Telegram / Live Telegram Demo
 
-Бот запущен 24/7 и открыт для тестирования: **[@seostrbot](https://t.me/seostrbot)**
+Бот розгорнутий 24/7 та відкритий для тестування: **[@seostrbot](https://t.me/seostrbot)**
 
-В живой демо-версии настроены:
-- ⚡️ **5 категорий цифровых товаров**: Подписки & Premium, AI & Нейросети, Софт & Лицензии, VPN & Безопасность, Игры & Steam.
-- 📦 **16 реалистичных позиций**: Telegram Premium, ChatGPT Plus, Midjourney, Claude Pro, Spotify, YouTube Premium, Steam Gift Cards, Shadowsocks VPN.
-- 🎟 **Промокоды**: `WELCOME10` (скидка 10%), `VIP20` (скидка 20%), `SPRING15` (скидка 15%).
-- 🎁 **Реферальная система**: начисление бонусов за приглашения друзей через `/ref`.
-- 🧺 **Корзина, избранное, поиск и оформление заказа** через конечные автоматы (FSM).
+В живому магазині реалізовано:
+- 🌐 **Мультимовність з вибором на старті**: Українська (🇺🇦) та English (🇬🇧).
+- 🎬 **Анімований HUD-банер каталогу (`assets/catalog.gif`)** над списком категорій.
+- 💰 **Подвійне відображення цін**: гривні (₴) та долари ($).
+- 💳 **Гнучкі способи оплати**: банківська картка (UAH Monobank / ПриватБанк) та криптовалюта (USDT TRC-20, TON, Bitcoin).
+- ⚡️ **5 категорій цифрових товарів**: Підписки & Premium, AI & Нейромережі, Софт & Ліцензії, Безпека & VPN, Ігри & Steam.
+- 📦 **16 реалістичних позицій**: Telegram Premium, ChatGPT Plus, Midjourney, Claude Pro, Spotify, YouTube Premium, Steam Gift Cards, Shadowsocks VPN.
+- 🎟 **Промокоди**: `WELCOME10` (знижка 10%), `VIP20` (знижка 20%), `SPRING15` (знижка 15%).
+- 🎁 **Реферальна програма**: нарахування бонусів за запрошення друзів через `/ref`.
 
----
-
-## ✨ Возможности
-
-### Пользовательская часть
-* 🛒 **Каталог** с категориями, карточками товаров и моментальной пагинацией
-* 🧺 **Корзина**: добавление, изменение количества, удаление, очистка
-* ✅ **Оформление заказа** через FSM (контакт → комментарий → подтверждение)
-* 📦 **Мои заказы** и история покупок с реальными статусами
-* 👤 **Личный кабинет**: баланс, количество заказов, общая сумма покупок
-* ⭐ **Избранное**: быстрый доступ к отложенным товарам
-* 🔍 **Поиск товаров** по названию и описанию
-* 🎁 **Реферальная программа** (`/ref`, deep-link `start=ref_<id>`)
-* 🏷 **Промокоды** со скидками в процентах
-
-### Админ-панель (`/admin`)
-* ➕ Добавление товара через интерактивный диалог FSM
-* ✏️ Редактирование товара (название, цена, описание, остаток на складе)
-* ❌ Удаление и отключение товара
-* 📦 Управление заказами и смена статусов с моментальным уведомлением покупателя
-* 📊 Аналитика и статистика (пользователи, заказы, оборот за сегодня и за всё время)
-* 🏆 Топ популярных товаров
-* 📢 Массовая рассылка сообщений с отчётом о доставке
-* 🏷 Создание промокодов
-* 📄 Экспорт базы заказов в CSV
+<p align="center">
+  <img src="assets/catalog.gif" alt="Catalog Animated GIF" width="580">
+</p>
 
 ---
 
-## 🧱 Стек технологий
+## ✨ Можливості / Features
 
-| Технология | Назначение |
+### Клієнтська частина / User Features
+* 🌐 **Вибір мови** при першому вході (🇺🇦 Українська / 🇬🇧 English) та швидка зміна в один клік
+* 🛒 **Інтерактивний каталог** з анімованим GIF-банером, категоріями та пагінацією
+* 🧺 **Кошик**: додавання, зміна кількості (➕/➖), швидке видалення та повне очищення
+* 💳 **Оформлення замовлення (FSM)**: вибір способу оплати (Картка UAH / Криптовалюта) → контакт → коментар → реквізити
+* 📦 **Мої замовлення**: детальна історія покупок з динамічними статусами
+* 👤 **Особистий кабінет**: баланс, кількість замовлень, загальна сума покупок
+* ⭐ **Обране**: збереження вподобаних товарів для швидкого доступу
+* 🔍 **Пошук товарів** за назвою та ключовими словами
+* 🎁 **Реферальна система** (`/ref`, deep-link `start=ref_<id>`)
+* 🏷 **Промокоди** з відсотковими знижками
+
+### Адмін-панель (`/admin`)
+* ➕ Додавання нових товарів через покроковий FSM-діалог
+* ✏️ Редагування товарів (назва, ціна, опис, залишок на складі)
+* ❌ Видалення та деактивація товарів
+* 📦 Управління замовленнями та зміна статусів з миттєвим сповіщенням покупця
+* 📊 Аналітика та статистика (користувачі, замовлення, оборот)
+* 🏆 Топ популярних товарів
+* 📢 Масова розсилка повідомлень клієнтам
+* 🏷 Створення та налаштування промокодів
+* 📄 Експорт бази замовлень у CSV
+
+---
+
+## 🧱 Стек технологій
+
+| Технологія | Призначення |
 |---|---|
-| **Python 3.12+** | Язык разработки |
-| **aiogram 3.31+** | Telegram Bot API, роутеры, FSM, middlewares, цветные инлайн-кнопки |
-| **SQLAlchemy 2.0 (async)** | Modern Async ORM, асинхронный доступ к БД |
-| **PostgreSQL / SQLite** | Реляционная СУБД с полной совместимостью (`asyncpg` / `aiosqlite`) |
-| **Alembic** | Миграции схемы базы данных |
-| **pydantic-settings** | Строго типизированная конфигурация из окружения `.env` |
-| **pytest & pytest-asyncio** | Автоматизированный тестовый набор |
-| **Docker & Docker Compose** | Контейнеризация и оркестрация |
+| **Python 3.12+** | Основна мова розробки |
+| **aiogram 3.31+** | Telegram Bot API, роутери, FSM, middlewares, інлайн-клавіатури |
+| **SQLAlchemy 2.0 (async)** | Modern Async ORM, асинхронний доступ до БД |
+| **PostgreSQL / SQLite** | Реляційна СУБД з повною сумісністю (`asyncpg` / `aiosqlite`) |
+| **Alembic** | Міграції схеми бази даних |
+| **pydantic-settings** | Сувора типізація конфігурації з `.env` |
+| **pytest & pytest-asyncio** | Покриття юніт- та інтеграційними тестами (15 тестів) |
+| **Docker & Docker Compose** | Контейнеризація та оркестрація |
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Швидкий старт
 
-### 1. Клонирование репозитория
+### 1. Клонування репозиторію
 ```bash
 git clone https://github.com/txltedxgod/telegram-store-bot.git
 cd telegram-store-bot
 ```
 
-### 2. Настройка окружения
+### 2. Налаштування оточення
 ```bash
 cp .env.example .env
 ```
-Заполните в `.env`:
-* `BOT_TOKEN` — токен от [@BotFather](https://t.me/BotFather)
-* `ADMIN_IDS` — ваш Telegram ID (узнать можно у [@userinfobot](https://t.me/userinfobot))
-* `DATABASE_URL` — строка подключения к PostgreSQL или SQLite (`sqlite+aiosqlite:///store.db`)
+Заповніть у `.env`:
+* `BOT_TOKEN` — токен від [@BotFather](https://t.me/BotFather)
+* `ADMIN_IDS` — ваш Telegram ID (дізнатися можна в [@userinfobot](https://t.me/userinfobot))
+* `DATABASE_URL` — рядок підключення до PostgreSQL або SQLite (`sqlite+aiosqlite:///store.db`)
 
 ---
 
 ## 🐳 Запуск через Docker Compose
 
-Поднятие PostgreSQL и контейнера бота одной командой:
+Підняття PostgreSQL та контейнера бота однією командою:
 ```bash
 docker compose up -d
 ```
 
-Просмотр логов:
+Перегляд логів:
 ```bash
 docker compose logs -f bot
 ```
 
-Остановка:
+Зупинка:
 ```bash
 docker compose down
 ```
 
 ---
 
-## 💻 Локальный запуск и разработка
+## 💻 Локальний запуск
 
 ```bash
 python -m venv .venv
-# Linux / macOS:
-source .venv/bin/activate
-# Windows:
-.\.venv\Scripts\Activate.ps1
-
+source .venv/bin/activate  # на Windows: .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python -m bot.bot
 ```
 
 ---
 
-## 🧪 Тестирование
+## 🧪 Тестування
 
-Проект покрыт автоматическими тестами бизнес-логики, сервисов, генерации инлайн-клавиатур и рендеринга текстов:
-
+Проект покритий автоматичними тестами:
 ```bash
 pytest -v
 ```
 
 ---
 
-## 🗂 Структура проекта
+## 🗂 Структура проекту
 
 ```
 telegram-store-bot/
-├── assets/              # Аватар бота и приветственный баннер
+├── assets/              # Аватар бота, welcome banner та catalog.gif
 ├── bot/
-│   ├── handlers/        # Роутеры: start, catalog, cart, checkout, orders, profile, admin
-│   ├── keyboards/       # Inline-клавиатуры и CallbackData фабрики
+│   ├── handlers/        # Роутери: start, catalog, cart, checkout, orders, profile, admin
+│   ├── keyboards/       # Inline-клавіатури та CallbackData фабрики
 │   ├── middlewares/     # Database session, logging, user tracking
-│   ├── services/        # Чистая бизнес-логика и сервисы (users, cart, orders, promo)
+│   ├── services/        # Чиста бізнес-логіка (users, cart, orders, promo)
 │   ├── database/        # ORM Base, Engine, Models, Seeder
-│   ├── states/          # FSM состояния (Checkout, Admin, Search)
-│   ├── utils/           # Форматирование валют, тексты, UI переходы
+│   ├── states/          # FSM стани (Checkout, Admin, Search)
+│   ├── utils/           # Emojis, форматування цін (₴ / $), тексти, UI переходи
 │   ├── config.py        # Pydantic Settings
-│   └── bot.py           # Точка входа polling/webhook
+│   └── bot.py           # Точка входу polling
 ├── tests/               # Pytest suite (services, keyboards, texts)
 ├── docker-compose.yml
 ├── Dockerfile
@@ -155,6 +159,6 @@ telegram-store-bot/
 
 ---
 
-## 📄 Лицензия
+## 📄 Ліцензія
 
-Распространяется под лицензией [MIT](LICENSE).
+Розповсюджується під ліцензією [MIT](LICENSE).

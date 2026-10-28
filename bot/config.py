@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     database_url_override: str | None = None
 
     # Store settings
-    currency: str = "₽"
+    currency: str = "₴"
     low_stock_threshold: int = 5
     referral_bonus: int = 50
 

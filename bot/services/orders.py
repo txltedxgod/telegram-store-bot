@@ -29,17 +29,18 @@ async def create_from_cart(
     user_id: int,
     contact: str | None,
     comment: str | None,
+    payment_method: str | None = "crypto",
     promocode: Promocode | None = None,
 ) -> Order:
     items: list[CartItem] = await cart_service.get_items(session, user_id)
     if not items:
-        raise CheckoutError("Корзина пуста")
+        raise CheckoutError("Корзина порожня" if contact != "en" else "Cart is empty")
 
     # Validate stock before committing.
     for item in items:
         if item.quantity > item.product.stock:
             raise CheckoutError(
-                f"Недостаточно товара «{item.product.name}» на складе"
+                f"Недостатньо товару «{item.product.name}» на складі"
             )
 
     subtotal = cart_service.total(items)
@@ -57,6 +58,7 @@ async def create_from_cart(
         discount=discount,
         contact=contact,
         comment=comment,
+        payment_method=payment_method,
         promocode_id=promocode.id if promocode else None,
     )
     session.add(order)
@@ -121,7 +123,7 @@ async def export_csv(session: AsyncSession) -> bytes:
     buffer = io.StringIO()
     writer = csv.writer(buffer)
     writer.writerow(
-        ["order_id", "user_id", "status", "total_price", "discount", "contact", "created_at"]
+        ["order_id", "user_id", "status", "total_price", "discount", "payment_method", "contact", "created_at"]
     )
     for order in orders:
         writer.writerow(
@@ -131,6 +133,7 @@ async def export_csv(session: AsyncSession) -> bytes:
                 order.status.value,
                 order.total_price,
                 order.discount,
+                order.payment_method or "",
                 order.contact or "",
                 order.created_at.isoformat() if order.created_at else "",
             ]

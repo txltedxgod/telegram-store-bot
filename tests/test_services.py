@@ -12,7 +12,7 @@ from bot.services import users as users_service
 
 
 @pytest.mark.asyncio
-async def test_user_creation_and_referral(session: AsyncSession):
+async def test_user_creation_referral_and_language(session: AsyncSession):
     # 1. Create referrer
     referrer, created = await users_service.get_or_create_user(
         session,
@@ -24,7 +24,13 @@ async def test_user_creation_and_referral(session: AsyncSession):
     assert referrer.telegram_id == 111111
     await session.commit()
 
-    # 2. Create referee
+    # 2. Set language
+    await users_service.set_language(session, referrer, "uk")
+    await session.commit()
+    refreshed_ref = await users_service.get_by_telegram_id(session, 111111)
+    assert refreshed_ref.language_code == "uk"
+
+    # 3. Create referee
     referee, created = await users_service.get_or_create_user(
         session,
         telegram_id=222222,
@@ -34,7 +40,7 @@ async def test_user_creation_and_referral(session: AsyncSession):
     assert created is True
     await session.commit()
 
-    # 3. Set referrer
+    # 4. Set referrer
     success = await users_service.set_referrer(session, referee, referrer.id)
     assert success is True
     await session.commit()
@@ -70,7 +76,7 @@ async def test_cart_and_order_flow(
     # 2490 * 2 = 4980
     assert total == Decimal("4980.00")
 
-    # 3. Checkout with promocode (20% discount)
+    # 3. Checkout with promocode (20% discount) and payment_method
     promo = await promo_service.get_active(session, "TEST20")
     assert promo is not None
 
@@ -79,11 +85,13 @@ async def test_cart_and_order_flow(
         user_id=sample_user.id,
         contact="@testbuyer",
         comment="Auto-delivery please",
+        payment_method="card_uah",
         promocode=promo,
     )
     await session.commit()
 
     assert order.id is not None
+    assert order.payment_method == "card_uah"
     # 20% of 4980 = 996. Total = 4980 - 996 = 3984
     assert order.discount == Decimal("996")
     assert order.total_price == Decimal("3984.00")
@@ -103,7 +111,7 @@ async def test_insufficient_stock_error(
     await cart_service.add_item(session, sample_user.id, sample_product.id, quantity=100)
     await session.commit()
 
-    with pytest.raises(orders_service.CheckoutError, match="Недостаточно товара"):
+    with pytest.raises(orders_service.CheckoutError, match="Недостат"):
         await orders_service.create_from_cart(
             session,
             user_id=sample_user.id,
