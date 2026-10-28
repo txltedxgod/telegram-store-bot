@@ -27,3 +27,11 @@ logs/
 # Exports
 exports/
 *.csv
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+.pytest_cache/

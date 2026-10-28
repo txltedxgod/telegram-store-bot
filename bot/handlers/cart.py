@@ -10,6 +10,7 @@ from bot.keyboards.callbacks import CartCB, MenuCB
 from bot.keyboards.user import back_home, cart_kb
 from bot.services import cart as cart_service
 from bot.utils.texts import cart_text
+from bot.utils.ui import render_menu_step
 
 router = Router(name="cart")
 

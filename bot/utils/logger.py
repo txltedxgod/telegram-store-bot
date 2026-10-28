@@ -4,6 +4,12 @@ from __future__ import annotations
 import logging
 import sys
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 
 def setup_logging(level: str = "INFO") -> None:
     """Configure root logging once for the whole application."""

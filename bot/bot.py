@@ -10,7 +10,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import BotCommand
 
 from bot.config import settings
-from bot.database.engine import session_factory
+from bot.database.engine import engine, is_sqlite, session_factory
 from bot.handlers import get_main_router
 from bot.middlewares import (
     DbSessionMiddleware,
@@ -25,10 +25,10 @@ logger = get_logger("bot.main")
 async def set_commands(bot: Bot) -> None:
     await bot.set_my_commands(
         [
-            BotCommand(command="start", description="Запустить бота"),
-            BotCommand(command="menu", description="Главное меню"),
-            BotCommand(command="ref", description="Реферальная ссылка"),
-            BotCommand(command="admin", description="Админ-панель"),
+            BotCommand(command="start", description="🚀 Запустить магазин"),
+            BotCommand(command="menu", description="📱 Главное меню"),
+            BotCommand(command="ref", description="🎁 Реферальная ссылка"),
+            BotCommand(command="admin", description="⚙️ Админ-панель"),
         ]
     )
 
@@ -44,6 +44,12 @@ def create_dispatcher() -> Dispatcher:
 
 
 async def on_startup(bot: Bot) -> None:
+    if is_sqlite:
+        from bot.database.base import Base
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Created SQLite tables via metadata.create_all")
+
     if settings.seed_demo_data:
         from bot.database.seed import seed_demo_data
 
@@ -78,3 +84,4 @@ if __name__ == "__main__":
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         logger.info("Bot stopped")
+

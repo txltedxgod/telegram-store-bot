@@ -17,6 +17,7 @@ from bot.services import cart as cart_service
 from bot.services import favorites as favorites_service
 from bot.services import products as products_service
 from bot.utils.texts import product_card
+from bot.utils.ui import render_menu_step
 
 router = Router(name="catalog")
 
@@ -42,8 +43,9 @@ async def show_catalog(query: CallbackQuery, session: AsyncSession) -> None:
     if not categories:
         await query.answer("Каталог пока пуст", show_alert=True)
         return
-    await query.message.edit_text(
-        "🛒 <b>Каталог</b>\n\nВыберите категорию:",
+    await render_menu_step(
+        query,
+        "🛒 <b>Каталог товаров SEO Store</b>\n────────────────────────\nВыберите интересующую категорию:",
         reply_markup=categories_kb(categories),
     )
     await query.answer()

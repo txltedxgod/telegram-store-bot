@@ -1,6 +1,7 @@
 """Application configuration loaded from environment variables / .env."""
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 
 from pydantic import field_validator
@@ -21,6 +22,9 @@ class Settings(BaseSettings):
     postgres_password: str = "store_password"
     postgres_db: str = "store_bot"
 
+    # Optional direct database URL (e.g. sqlite+aiosqlite:///store.db)
+    database_url_override: str | None = None
+
     # Store settings
     currency: str = "₽"
     low_stock_threshold: int = 5
@@ -40,9 +44,11 @@ class Settings(BaseSettings):
     @field_validator("admin_ids", mode="before")
     @classmethod
     def _parse_admin_ids(cls, value: object) -> object:
-        """Allow ADMIN_IDS to be given as \"1,2 3\" or a JSON-style list."""
+        """Allow ADMIN_IDS to be given as int, string "1,2 3", or list."""
         if value is None or value == "":
             return []
+        if isinstance(value, int):
+            return [value]
         if isinstance(value, str):
             cleaned = value.replace(",", " ").replace(";", " ")
             return [int(part) for part in cleaned.split() if part.strip()]
@@ -50,7 +56,10 @@ class Settings(BaseSettings):
 
     @property
     def database_url(self) -> str:
-        """Async SQLAlchemy URL (asyncpg driver)."""
+        """Async SQLAlchemy URL (supports postgresql+asyncpg and sqlite+aiosqlite)."""
+        env_url = os.getenv("DATABASE_URL") or self.database_url_override
+        if env_url:
+            return env_url
         return (
             f"postgresql+asyncpg://{self.postgres_user}:{self.postgres_password}"
             f"@{self.postgres_host}:{self.postgres_port}/{self.postgres_db}"

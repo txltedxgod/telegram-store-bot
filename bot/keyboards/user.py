@@ -20,13 +20,14 @@ from bot.utils.texts import money, status_label
 
 def main_menu() -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    kb.button(text="🛒 Каталог", callback_data=MenuCB(action="catalog"), style=ButtonStyle.PRIMARY)
+    kb.button(text="🛒 Каталог товаров", callback_data=MenuCB(action="catalog"), style=ButtonStyle.PRIMARY)
     kb.button(text="🧺 Корзина", callback_data=MenuCB(action="cart"))
     kb.button(text="📦 Мои заказы", callback_data=MenuCB(action="orders"))
-    kb.button(text="👤 Профиль", callback_data=MenuCB(action="profile"))
+    kb.button(text="👤 Личный кабинет", callback_data=MenuCB(action="profile"))
     kb.button(text="⭐ Избранное", callback_data=MenuCB(action="favorites"))
     kb.button(text="🔍 Поиск", callback_data=MenuCB(action="search"))
-    kb.adjust(2, 2, 2)
+    kb.button(text="🎁 Рефералы и Бонусы", callback_data=MenuCB(action="referral"))
+    kb.adjust(1, 2, 2, 2)
     return kb.as_markup()
 
 

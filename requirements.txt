@@ -1,6 +1,9 @@
-aiogram==3.28.2
-SQLAlchemy[asyncio]==2.0.35
+aiogram==3.31.0
+SQLAlchemy[asyncio]==2.1.6
 asyncpg==0.29.0
-alembic==1.13.3
-pydantic-settings==2.5.2
-python-dotenv==1.0.1
+aiosqlite>=0.20.0
+alembic==1.20.1
+pydantic-settings>=2.5.0
+python-dotenv>=1.0.0
+pytest>=9.0.0
+pytest-asyncio>=1.4.0
