@@ -1,4 +1,4 @@
-"""/start, main menu, language selector, and registration (with referral deep-links)."""
+"""/start, main menu, language selector, and animated video/GIF welcome loop."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -13,7 +13,7 @@ from bot.database.models import User
 from bot.keyboards.callbacks import LanguageCB, MenuCB
 from bot.keyboards.user import back_home, language_selection_kb, main_menu
 from bot.services import users as users_service
-from bot.utils.emojis import EMOJI_GIFT, EMOJI_LIGHTNING, ce
+from bot.utils.emojis import EMOJI_GIFT, ce
 from bot.utils.logger import get_logger
 from bot.utils.texts import (
     get_lang,
@@ -21,12 +21,22 @@ from bot.utils.texts import (
     money,
     welcome_text,
 )
-from bot.utils.ui import render_menu_step
+from bot.utils.ui import render_animation_step, render_menu_step
 
 logger = get_logger("bot.start")
 router = Router(name="start")
 
-BANNER_PATH = Path(__file__).resolve().parent.parent.parent / "assets" / "welcome.png"
+ASSETS_DIR = Path(__file__).resolve().parent.parent.parent / "assets"
+WELCOME_MP4_PATH = ASSETS_DIR / "welcome.mp4"
+WELCOME_GIF_PATH = ASSETS_DIR / "welcome.gif"
+
+
+def get_welcome_media_path() -> Path | None:
+    if WELCOME_MP4_PATH.exists():
+        return WELCOME_MP4_PATH
+    if WELCOME_GIF_PATH.exists():
+        return WELCOME_GIF_PATH
+    return None
 
 
 async def _apply_referral(
@@ -59,17 +69,18 @@ async def _send_welcome(message: Message, user: User) -> None:
 
     text = welcome_text(user)
     lang = get_lang(user)
-    if BANNER_PATH.exists():
+    media_path = get_welcome_media_path()
+    if media_path:
         try:
-            await message.answer_photo(
-                FSInputFile(str(BANNER_PATH)),
+            await message.answer_animation(
+                FSInputFile(str(media_path)),
                 caption=text,
                 reply_markup=main_menu(lang),
                 parse_mode="HTML",
             )
             return
         except Exception as e:
-            logger.warning("Failed to send welcome banner photo: %s", e)
+            logger.warning("Failed to send welcome animation: %s", e)
     await message.answer(text, reply_markup=main_menu(lang), parse_mode="HTML")
 
 
@@ -98,12 +109,11 @@ async def handle_language_choice(
     session: AsyncSession,
     user: User,
 ) -> None:
-    """Save selected language and present main menu."""
+    """Save selected language and present animated main menu."""
     await users_service.set_language(session, user, callback_data.code)
     await session.commit()
     await query.answer()
 
-    # Delete language selection message and show welcome with banner
     if query.message:
         try:
             await query.message.delete()
@@ -127,25 +137,16 @@ async def switch_language_menu(query: CallbackQuery) -> None:
 async def back_to_menu(query: CallbackQuery, user: User) -> None:
     lang = get_lang(user)
     text = welcome_text(user)
-    msg = query.message
-    if msg and msg.photo:
-        try:
-            await msg.edit_caption(
-                caption=text, reply_markup=main_menu(lang), parse_mode="HTML"
-            )
-            await query.answer()
-            return
-        except Exception:
-            pass
-    try:
-        if msg:
-            await msg.edit_text(
-                text, reply_markup=main_menu(lang), parse_mode="HTML"
-            )
-    except Exception:
-        if msg:
-            await msg.delete()
-            await _send_welcome(msg, user)
+    media_path = get_welcome_media_path()
+    if media_path:
+        await render_animation_step(
+            query,
+            media_path,
+            text,
+            reply_markup=main_menu(lang),
+        )
+    else:
+        await render_menu_step(query, text, reply_markup=main_menu(lang))
     await query.answer()
 
 
@@ -159,8 +160,7 @@ async def referral_menu_callback(query: CallbackQuery, user: User) -> None:
 
     if lang == "en":
         text = (
-            f"{icon_gift} <b>SEO Store Referral Program</b>\n"
-            f"────────────────────────\n"
+            f"{icon_gift} <b>SEO Store Referral Program</b>\n\n"
             f"Invite friends and earn <b>{bonus}</b> to your balance "
             f"for every registered customer!\n\n"
             f"🔗 Your unique referral link:\n"
@@ -169,8 +169,7 @@ async def referral_menu_callback(query: CallbackQuery, user: User) -> None:
         )
     else:
         text = (
-            f"{icon_gift} <b>Реферальна програма SEO Store</b>\n"
-            f"────────────────────────\n"
+            f"{icon_gift} <b>Реферальна програма SEO Store</b>\n\n"
             f"Запрошуйте друзів та отримуйте по <b>{bonus}</b> "
             f"на баланс за кожного зареєстрованого покупця!\n\n"
             f"🔗 Ваше унікальне посилання для запрошень:\n"
@@ -197,16 +196,14 @@ async def referral_link(message: Message, user: User) -> None:
 
     if lang == "en":
         await message.answer(
-            f"{icon_gift} <b>Referral Program</b>\n"
-            f"────────────────────────\n"
+            f"{icon_gift} <b>Referral Program</b>\n\n"
             f"Share your link and get <b>{bonus}</b> for each friend:\n"
             f"<code>{link}</code>",
             parse_mode="HTML",
         )
     else:
         await message.answer(
-            f"{icon_gift} <b>Реферальна програма</b>\n"
-            f"────────────────────────\n"
+            f"{icon_gift} <b>Реферальна програма</b>\n\n"
             f"Діліться посиланням та отримуйте по <b>{bonus}</b> за кожного друга:\n"
             f"<code>{link}</code>",
             parse_mode="HTML",

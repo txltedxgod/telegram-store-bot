@@ -26,6 +26,8 @@ def test_main_menu_keyboard_uk():
     assert any("Кошик" in t for t in button_texts)
     assert any("Мої замовлення" in t for t in button_texts)
     assert any("Особистий кабінет" in t for t in button_texts)
+    # Check that custom emoji icons are attached to buttons
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
 
 
 def test_main_menu_keyboard_en():
@@ -36,6 +38,7 @@ def test_main_menu_keyboard_en():
     assert any("Cart" in t for t in button_texts)
     assert any("My Orders" in t for t in button_texts)
     assert any("Profile" in t for t in button_texts)
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
 
 
 def test_payment_methods_keyboard():
@@ -43,6 +46,7 @@ def test_payment_methods_keyboard():
     button_texts = [btn.text for row in kb.inline_keyboard for btn in row]
     assert any("Гривня" in t for t in button_texts)
     assert any("Криптовалюта" in t for t in button_texts)
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
 
 
 def test_back_home_keyboard():
@@ -50,6 +54,7 @@ def test_back_home_keyboard():
     assert kb is not None
     assert len(kb.inline_keyboard) == 1
     assert "В меню" in kb.inline_keyboard[0][0].text
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
 
 
 def test_categories_keyboard():
@@ -59,8 +64,9 @@ def test_categories_keyboard():
     ]
     kb = categories_kb(cats, lang="uk")
     assert len(kb.inline_keyboard) == 3  # 2 categories + Back button
-    assert "🛡 VPN" in kb.inline_keyboard[0][0].text
-    assert "🤖 AI" in kb.inline_keyboard[1][0].text
+    assert "VPN" in kb.inline_keyboard[0][0].text
+    assert "AI" in kb.inline_keyboard[1][0].text
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
 
 
 def test_products_keyboard():
@@ -72,3 +78,4 @@ def test_products_keyboard():
     assert len(kb.inline_keyboard) == 3  # 2 products + Back button
     assert "Shadowsocks" in kb.inline_keyboard[0][0].text
     assert "WireGuard" in kb.inline_keyboard[1][0].text
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None

@@ -23,14 +23,12 @@ async def start_search(query: CallbackQuery, state: FSMContext, user: User) -> N
     await state.set_state(SearchSG.query)
     if lang == "en":
         text = (
-            "🔍 <b>Product Search</b>\n"
-            "────────────────────────\n"
+            "🔍 <b>Product Search</b>\n\n"
             "Enter your search query (e.g. <code>Steam</code>, <code>Windows</code>, <code>VPN</code>, <code>AI</code>):"
         )
     else:
         text = (
-            "🔍 <b>Пошук товарів SEO Store</b>\n"
-            "────────────────────────\n"
+            "🔍 <b>Пошук товарів SEO Store</b>\n\n"
             "Введіть пошуковий запит (наприклад: <code>Steam</code>, <code>Windows</code>, <code>VPN</code>, <code>AI</code>):"
         )
 

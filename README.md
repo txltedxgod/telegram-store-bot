@@ -1,7 +1,7 @@
 # 🛒 Telegram Store Bot
 
 <p align="center">
-  <img src="assets/welcome.png" alt="Telegram Store Bot Banner" width="740">
+  <img src="assets/welcome.gif" alt="Telegram Store Bot Banner" width="740">
 </p>
 
 <p align="center">

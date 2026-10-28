@@ -40,14 +40,12 @@ async def start_checkout(
     await state.set_state(CheckoutSG.payment_method)
     if lang == "en":
         text = (
-            "💳 <b>Checkout — Step 1/3</b>\n"
-            "────────────────────────\n"
+            "💳 <b>Checkout — Step 1/3</b>\n\n"
             "Please select your payment method:"
         )
     else:
         text = (
-            "💳 <b>Оформлення замовлення — Крок 1/3</b>\n"
-            "────────────────────────\n"
+            "💳 <b>Оформлення замовлення — Крок 1/3</b>\n\n"
             "Оберіть зручний спосіб оплати:"
         )
 
@@ -66,14 +64,12 @@ async def select_payment_method(
 
     if lang == "en":
         text = (
-            "📝 <b>Checkout — Step 2/3</b>\n"
-            "────────────────────────\n"
+            "📝 <b>Checkout — Step 2/3</b>\n\n"
             "Enter your Telegram (@username) or contact info for automated delivery:"
         )
     else:
         text = (
-            "📝 <b>Оформлення замовлення — Крок 2/3</b>\n"
-            "────────────────────────\n"
+            "📝 <b>Оформлення замовлення — Крок 2/3</b>\n\n"
             "Введіть ваш Telegram (@username) або контакт для автоматичної видачі товару:"
         )
 
@@ -98,14 +94,12 @@ async def checkout_contact(message: Message, state: FSMContext, user: User) -> N
 
     if lang == "en":
         text = (
-            "💬 <b>Checkout — Step 3/3</b>\n"
-            "────────────────────────\n"
+            "💬 <b>Checkout — Step 3/3</b>\n\n"
             "Add a note/comment to your order, or press skip:"
         )
     else:
         text = (
-            "💬 <b>Оформлення замовлення — Крок 3/3</b>\n"
-            "────────────────────────\n"
+            "💬 <b>Оформлення замовлення — Крок 3/3</b>\n\n"
             "Додайте коментар або примітку до замовлення (або пропустіть крок):"
         )
 
@@ -145,7 +139,7 @@ async def _finalize(
         pay_details = (
             "💳 <b>Реквізити для оплати:</b>\n"
             "• Картка: <code>4149 6293 8471 9928</code> (Monobank)\n"
-            "• Призначення платежу: <code>Замовлення #" + str(order.id) + "</code>\n"
+            "• Призначення: <code>Замовлення #" + str(order.id) + "</code>\n"
             "• Отримувач: ФОП / SEO Store"
         ) if lang == "uk" else (
             "💳 <b>Payment Requisites:</b>\n"
@@ -170,22 +164,18 @@ async def _finalize(
 
     if lang == "en":
         summary = (
-            f"{icon_check} <b>Order #{order.id} Successfully Placed!</b>\n"
-            "────────────────────────\n"
+            f"{icon_check} <b>Order #{order.id} Successfully Placed!</b>\n\n"
             f"💰 Amount to pay: <b>{money(order.total_price)}</b>\n"
             f"{icon_coin} Payment method: <b>{pay_title_en}</b>\n\n"
-            f"{pay_details}\n"
-            "────────────────────────\n"
+            f"{pay_details}\n\n"
             f"{icon_lock} <i>After payment is detected, your digital goods and licenses will be delivered immediately!</i>"
         )
     else:
         summary = (
-            f"{icon_check} <b>Замовлення #{order.id} успішно створено!</b>\n"
-            "────────────────────────\n"
+            f"{icon_check} <b>Замовлення #{order.id} успішно створено!</b>\n\n"
             f"💰 Сума до сплати: <b>{money(order.total_price)}</b>\n"
             f"{icon_coin} Спосіб оплати: <b>{pay_title_uk}</b>\n\n"
-            f"{pay_details}\n"
-            "────────────────────────\n"
+            f"{pay_details}\n\n"
             f"{icon_lock} <i>Після підтвердження транзакції цифровий ключ або ліцензія надійде автоматично в цей діалог!</i>"
         )
 
