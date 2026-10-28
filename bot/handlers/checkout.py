@@ -18,7 +18,17 @@ from bot.keyboards.user import (
 from bot.services import cart as cart_service
 from bot.services import orders as orders_service
 from bot.states import CheckoutSG
-from bot.utils.emojis import EMOJI_CHECK, EMOJI_COIN, EMOJI_LOCK, ce
+from bot.utils.emojis import (
+    EMOJI_CARD,
+    EMOJI_CHAT,
+    EMOJI_CHECK,
+    EMOJI_COIN,
+    EMOJI_LIGHTNING,
+    EMOJI_LOCK,
+    EMOJI_MONEY,
+    EMOJI_ORDERS,
+    ce,
+)
 from bot.utils.logger import get_logger
 from bot.utils.texts import get_lang, money
 
@@ -39,14 +49,15 @@ async def start_checkout(
 
     await query.answer()
     await state.set_state(CheckoutSG.payment_method)
+    icon_card = ce(EMOJI_CARD, "💳")
     if lang == "en":
         text = (
-            "💳 <b>Checkout • Step 1/3</b>\n\n"
+            f"{icon_card} <b>Checkout • Step 1/3</b>\n\n"
             "Please select your payment method:"
         )
     else:
         text = (
-            "💳 <b>Оформлення замовлення • Крок 1/3</b>\n\n"
+            f"{icon_card} <b>Оформлення замовлення • Крок 1/3</b>\n\n"
             "Оберіть зручний спосіб оплати:"
         )
 
@@ -63,14 +74,15 @@ async def select_payment_method(
     await state.set_state(CheckoutSG.contact)
 
     await query.answer()
+    icon_orders = ce(EMOJI_ORDERS, "📝")
     if lang == "en":
         text = (
-            "📝 <b>Checkout • Step 2/3</b>\n\n"
+            f"{icon_orders} <b>Checkout • Step 2/3</b>\n\n"
             "Enter your Telegram (@username) or contact info for automated delivery:"
         )
     else:
         text = (
-            "📝 <b>Оформлення замовлення • Крок 2/3</b>\n\n"
+            f"{icon_orders} <b>Оформлення замовлення • Крок 2/3</b>\n\n"
             "Введіть ваш Telegram (@username) або контакт для автоматичної видачі товару:"
         )
 
@@ -92,14 +104,15 @@ async def checkout_contact(message: Message, state: FSMContext, user: User) -> N
     await state.update_data(contact=message.text.strip())
     await state.set_state(CheckoutSG.comment)
 
+    icon_chat = ce(EMOJI_CHAT, "💬")
     if lang == "en":
         text = (
-            "💬 <b>Checkout • Step 3/3</b>\n\n"
+            f"{icon_chat} <b>Checkout • Step 3/3</b>\n\n"
             "Add a note/comment to your order, or press skip:"
         )
     else:
         text = (
-            "💬 <b>Оформлення замовлення • Крок 3/3</b>\n\n"
+            f"{icon_chat} <b>Оформлення замовлення • Крок 3/3</b>\n\n"
             "Додайте коментар або примітку до замовлення (або пропустіть крок):"
         )
 
@@ -131,18 +144,21 @@ async def _finalize(
     icon_check = ce(EMOJI_CHECK, "✅")
     icon_coin = ce(EMOJI_COIN, "🪙")
     icon_lock = ce(EMOJI_LOCK, "🔒")
+    icon_money = ce(EMOJI_MONEY, "💰")
+    icon_card = ce(EMOJI_CARD, "💳")
+    icon_lightning = ce(EMOJI_LIGHTNING, "⚡️")
 
     # Payment details display
     if payment_method == "card_uah":
         pay_title_uk = "Картка UAH (Monobank / ПриватБанк)"
         pay_title_en = "Card UAH (Monobank / PrivatBank)"
         pay_details = (
-            "💳 <b>Реквізити для оплати:</b>\n"
+            f"{icon_card} <b>Реквізити для оплати:</b>\n"
             "• Картка: <code>4149 6293 8471 9928</code> (Monobank)\n"
             "• Призначення: <code>Замовлення #" + str(order.id) + "</code>\n"
             "• Отримувач: ФОП / SEO Store"
         ) if lang == "uk" else (
-            "💳 <b>Payment Requisites:</b>\n"
+            f"{icon_card} <b>Payment Requisites:</b>\n"
             "• Card: <code>4149 6293 8471 9928</code> (Monobank)\n"
             "• Reference: <code>Order #" + str(order.id) + "</code>\n"
             "• Recipient: FOP / SEO Store"
@@ -151,12 +167,12 @@ async def _finalize(
         pay_title_uk = "Криптовалюта (USDT / TON / BTC)"
         pay_title_en = "Crypto (USDT / TON / BTC)"
         pay_details = (
-            "⚡️ <b>Крипто-гаманці для оплати:</b>\n"
+            f"{icon_lightning} <b>Крипто-гаманці для оплати:</b>\n"
             "• <b>USDT (TRC-20):</b> <code>TXLTedxGodStoreOfficialTrx20Address</code>\n"
             "• <b>TON:</b> <code>UQBWx9_SeoStoreOfficialTonAddress</code>\n"
             "• <b>BTC:</b> <code>bc1q9seostoredigitalcryptostore12345</code>"
         ) if lang == "uk" else (
-            "⚡️ <b>Crypto Deposit Wallets:</b>\n"
+            f"{icon_lightning} <b>Crypto Deposit Wallets:</b>\n"
             "• <b>USDT (TRC-20):</b> <code>TXLTedxGodStoreOfficialTrx20Address</code>\n"
             "• <b>TON:</b> <code>UQBWx9_SeoStoreOfficialTonAddress</code>\n"
             "• <b>BTC:</b> <code>bc1q9seostoredigitalcryptostore12345</code>"
@@ -165,7 +181,7 @@ async def _finalize(
     if lang == "en":
         summary = (
             f"{icon_check} <b>Order #{order.id} Successfully Placed!</b>\n\n"
-            f"💰 Amount to pay: <b>{money(order.total_price)}</b>\n"
+            f"{icon_money} Amount to pay: <b>{money(order.total_price)}</b>\n"
             f"{icon_coin} Payment method: <b>{pay_title_en}</b>\n\n"
             f"{pay_details}\n\n"
             f"{icon_lock} <i>After payment is detected, your digital goods and licenses will be delivered immediately!</i>"
@@ -173,7 +189,7 @@ async def _finalize(
     else:
         summary = (
             f"{icon_check} <b>Замовлення #{order.id} успішно створено!</b>\n\n"
-            f"💰 Сума до сплати: <b>{money(order.total_price)}</b>\n"
+            f"{icon_money} Сума до сплати: <b>{money(order.total_price)}</b>\n"
             f"{icon_coin} Спосіб оплати: <b>{pay_title_uk}</b>\n\n"
             f"{pay_details}\n\n"
             f"{icon_lock} <i>Після підтвердження транзакції цифровий ключ або ліцензія надійде автоматично в цей діалог!</i>"

@@ -9,6 +9,7 @@ from bot.database.models import User
 from bot.keyboards.callbacks import FavoriteCB, MenuCB
 from bot.keyboards.user import back_home, favorites_kb
 from bot.services import favorites as favorites_service
+from bot.utils.emojis import EMOJI_STAR, ce
 from bot.utils.texts import get_lang
 from bot.utils.ui import render_menu_step
 
@@ -19,20 +20,21 @@ router = Router(name="favorites")
 async def show_favorites(query: CallbackQuery, session: AsyncSession, user: User) -> None:
     lang = get_lang(user)
     favorites = await favorites_service.list_favorites(session, user.id)
+    icon_star = ce(EMOJI_STAR, "⭐️")
     if not favorites:
         empty_text = (
-            "⭐ <b>Favorites</b>\n\nYour favorites list is empty. Add items from product cards."
+            f"{icon_star} <b>Favorites</b>\n\nYour favorites list is empty. Add items from product cards."
             if lang == "en"
-            else "⭐ <b>Обране</b>\n\nСписок порожній. Додавайте товари з карток товарів."
+            else f"{icon_star} <b>Обране</b>\n\nСписок порожній. Додавайте товари з карток товарів."
         )
         await render_menu_step(query, empty_text, reply_markup=back_home(lang))
         await query.answer()
         return
 
     prompt = (
-        "⭐ <b>Favorites</b>\n\nSelect an item:"
+        f"{icon_star} <b>Favorites</b>\n\nSelect an item:"
         if lang == "en"
-        else "⭐ <b>Обране</b>\n\nОберіть товар:"
+        else f"{icon_star} <b>Обране</b>\n\nОберіть товар:"
     )
     await render_menu_step(
         query,

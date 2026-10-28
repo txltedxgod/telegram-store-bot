@@ -9,6 +9,7 @@ from bot.database.models import User
 from bot.keyboards.callbacks import MenuCB, OrderCB
 from bot.keyboards.user import back_home, order_detail_kb, orders_kb
 from bot.services import orders as orders_service
+from bot.utils.emojis import EMOJI_ORDERS, ce
 from bot.utils.texts import get_lang, order_card
 from bot.utils.ui import render_menu_step
 
@@ -19,20 +20,21 @@ router = Router(name="orders")
 async def show_orders(query: CallbackQuery, session: AsyncSession, user: User) -> None:
     lang = get_lang(user)
     orders = await orders_service.list_user_orders(session, user.id)
+    icon_orders = ce(EMOJI_ORDERS, "📦")
     if not orders:
         empty_text = (
-            "📦 <b>My Orders</b>\n\nYou have no orders yet."
+            f"{icon_orders} <b>My Orders</b>\n\nYou have no orders yet."
             if lang == "en"
-            else "📦 <b>Мої замовлення</b>\n\nУ вас поки немає замовлень."
+            else f"{icon_orders} <b>Мої замовлення</b>\n\nУ вас поки немає замовлень."
         )
         await render_menu_step(query, empty_text, reply_markup=back_home(lang))
         await query.answer()
         return
 
     prompt = (
-        "📦 <b>My Orders</b>\n\nSelect an order to view details:"
+        f"{icon_orders} <b>My Orders</b>\n\nSelect an order to view details:"
         if lang == "en"
-        else "📦 <b>Мої замовлення</b>\n\nОберіть замовлення для перегляду деталей:"
+        else f"{icon_orders} <b>Мої замовлення</b>\n\nОберіть замовлення для перегляду деталей:"
     )
     await render_menu_step(
         query,

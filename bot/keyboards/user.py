@@ -7,7 +7,7 @@ from aiogram.enums import ButtonStyle
 from aiogram.types import InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from bot.database.models import CartItem, Category, Favorite, Order, Product
+from bot.database.models import CartItem, Category, Favorite, Order, OrderStatus, Product
 from bot.keyboards.callbacks import (
     CartCB,
     CategoryCB,
@@ -245,11 +245,11 @@ def cart_kb(items: list[CartItem], lang: str = "uk") -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for item in items:
         unit = "pcs" if lang == "en" else "шт."
-        clean_name = item.product.name.lstrip("⭐️🔮🎧🎬🧠🎨⚡️🪟📊🛡🔒🎮🕹 ").strip()
-        kb.button(text=f"➖ {clean_name}", callback_data=CartCB(action="dec", product_id=item.product_id))
+        clean_name = item.product.name.lstrip("⭐️⭐🔮🎧🎬🧠🎨⚡️🪟📊🛡🔒🎮🕹 ").strip()
+        kb.button(text=f"- {clean_name}", callback_data=CartCB(action="dec", product_id=item.product_id))
         kb.button(text=f"{item.quantity} {unit}", callback_data=CartCB(action="noop", product_id=item.product_id))
-        kb.button(text="➕", callback_data=CartCB(action="inc", product_id=item.product_id))
-        kb.button(text="🗑", callback_data=CartCB(action="remove", product_id=item.product_id), style=ButtonStyle.DANGER)
+        kb.button(text="+", callback_data=CartCB(action="inc", product_id=item.product_id))
+        kb.button(text="✕", callback_data=CartCB(action="remove", product_id=item.product_id), style=ButtonStyle.DANGER)
     if items:
         checkout_text = "Оформити замовлення" if lang == "uk" else "Checkout Order"
         clear_text = "Очистити" if lang == "uk" else "Clear Cart"
@@ -310,10 +310,27 @@ def payment_methods_kb(lang: str = "uk") -> InlineKeyboardMarkup:
     return kb.as_markup()
 
 
+def plain_status_label(status: OrderStatus, lang: str = "uk") -> str:
+    mapping_uk = {
+        OrderStatus.pending: "Очікує оплати",
+        OrderStatus.paid: "Оплачено",
+        OrderStatus.completed: "Виконано",
+        OrderStatus.cancelled: "Скасовано",
+    }
+    mapping_en = {
+        OrderStatus.pending: "Pending",
+        OrderStatus.paid: "Paid",
+        OrderStatus.completed: "Completed",
+        OrderStatus.cancelled: "Cancelled",
+    }
+    mapping = mapping_en if lang == "en" else mapping_uk
+    return mapping.get(status, str(status.value))
+
+
 def orders_kb(orders: list[Order], lang: str = "uk") -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for order in orders:
-        label = status_label(order.status, lang).lstrip("⏳💳✅❌ ")
+        label = plain_status_label(order.status, lang)
         kb.button(
             text=f"#{order.id} • {label}",
             callback_data=OrderCB(order_id=order.id),
@@ -342,8 +359,8 @@ def order_detail_kb(lang: str = "uk") -> InlineKeyboardMarkup:
 
 def checkout_comment_kb(lang: str = "uk") -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    skip_text = "⏭ Skip" if lang == "en" else "⏭ Пропустити"
-    cancel_text = "❌ Cancel" if lang == "en" else "❌ Скасувати"
+    skip_text = "Skip" if lang == "en" else "Пропустити"
+    cancel_text = "Cancel" if lang == "en" else "Скасувати"
     kb.button(text=skip_text, callback_data=CheckoutCB(action="skip"))
     kb.button(text=cancel_text, callback_data=CheckoutCB(action="cancel"), style=ButtonStyle.DANGER)
     kb.adjust(2)
@@ -352,7 +369,7 @@ def checkout_comment_kb(lang: str = "uk") -> InlineKeyboardMarkup:
 
 def checkout_cancel_kb(lang: str = "uk") -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
-    cancel_text = "❌ Cancel" if lang == "en" else "❌ Скасувати"
+    cancel_text = "Cancel" if lang == "en" else "Скасувати"
     kb.button(text=cancel_text, callback_data=CheckoutCB(action="cancel"), style=ButtonStyle.DANGER)
     return kb.as_markup()
 

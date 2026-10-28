@@ -18,7 +18,7 @@ from bot.services import cart as cart_service
 from bot.services import categories as categories_service
 from bot.services import favorites as favorites_service
 from bot.services import products as products_service
-from bot.utils.emojis import EMOJI_CATALOG, ce
+from bot.utils.emojis import EMOJI_CATALOG, EMOJI_DIAMOND, ce
 from bot.utils.texts import get_lang, product_card
 from bot.utils.ui import render_animation_step, render_menu_step
 
@@ -95,7 +95,8 @@ async def show_category(
         return
 
     prompt = "Select an item:" if lang == "en" else "Оберіть товар:"
-    text = f"💎 <b>{category.title}</b>\n\n{prompt}"
+    icon_diamond = ce(EMOJI_DIAMOND, "💎")
+    text = f"{icon_diamond} <b>{category.name}</b>\n\n{prompt}"
     await render_menu_step(
         query,
         text,
@@ -124,5 +125,5 @@ async def buy_product(
         await query.answer(unavailable, show_alert=True)
         return
     await cart_service.add_item(session, user.id, product.id, quantity=1)
-    added = f"«{product.name}» added to cart 🧺" if lang == "en" else f"«{product.name}» додано до кошика 🧺"
+    added = f"«{product.name}» added to cart" if lang == "en" else f"«{product.name}» додано до кошика"
     await query.answer(added, show_alert=False)

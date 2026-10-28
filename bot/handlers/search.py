@@ -11,6 +11,7 @@ from bot.keyboards.callbacks import MenuCB
 from bot.keyboards.user import back_home, products_kb
 from bot.services import products as products_service
 from bot.states import SearchSG
+from bot.utils.emojis import EMOJI_SEARCH, ce
 from bot.utils.texts import get_lang
 from bot.utils.ui import render_menu_step
 
@@ -20,15 +21,16 @@ router = Router(name="search")
 @router.callback_query(MenuCB.filter(F.action == "search"))
 async def start_search(query: CallbackQuery, state: FSMContext, user: User) -> None:
     lang = get_lang(user)
+    icon_search = ce(EMOJI_SEARCH, "🔎")
     await state.set_state(SearchSG.query)
     if lang == "en":
         text = (
-            "🔍 <b>Product Search</b>\n\n"
+            f"{icon_search} <b>Product Search</b>\n\n"
             "Enter your search query (e.g. <code>Steam</code>, <code>Windows</code>, <code>VPN</code>, <code>AI</code>):"
         )
     else:
         text = (
-            "🔍 <b>Пошук товарів SEO Store</b>\n\n"
+            f"{icon_search} <b>Пошук товарів SEO Store</b>\n\n"
             "Введіть пошуковий запит (наприклад: <code>Steam</code>, <code>Windows</code>, <code>VPN</code>, <code>AI</code>):"
         )
 
@@ -43,6 +45,7 @@ async def start_search(query: CallbackQuery, state: FSMContext, user: User) -> N
 @router.message(SearchSG.query)
 async def process_search(message: Message, state: FSMContext, session: AsyncSession, user: User) -> None:
     lang = get_lang(user)
+    icon_search = ce(EMOJI_SEARCH, "🔎")
     query_text = (message.text or "").strip()
     if not query_text:
         warning = "Please enter search keywords." if lang == "en" else "Будь ласка, введіть текст для пошуку."
@@ -68,13 +71,13 @@ async def process_search(message: Message, state: FSMContext, session: AsyncSess
 
     if lang == "en":
         title = (
-            f"🔍 <b>Search results for «{query_text}»:</b>\n"
+            f"{icon_search} <b>Search results for «{query_text}»:</b>\n"
             f"Items found: <b>{len(results)}</b>\n\n"
             "Select an item to view details:"
         )
     else:
         title = (
-            f"🔍 <b>Результати пошуку за «{query_text}»:</b>\n"
+            f"{icon_search} <b>Результати пошуку за «{query_text}»:</b>\n"
             f"Знайдено товарів: <b>{len(results)}</b>\n\n"
             "Оберіть товар для перегляду деталей:"
         )

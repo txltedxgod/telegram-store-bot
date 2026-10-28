@@ -10,18 +10,18 @@ from bot.services import products as products_service
 from bot.services import promocodes as promocodes_service
 
 DEMO_CATEGORIES = [
-    ("⚡️ Підписки & Premium", "💎"),
-    ("🤖 AI & Нейромережі", "🧠"),
-    ("💻 Софт & Ліцензії", "🔑"),
-    ("🛡 Безпека & VPN", "🌐"),
-    ("🕹 Ігри & Steam", "🎮"),
+    ("Підписки & Premium", "💎"),
+    ("AI & Нейромережі", "🧠"),
+    ("Софт & Ліцензії", "🔑"),
+    ("Безпека & VPN", "🌐"),
+    ("Ігри & Steam", "🎮"),
 ]
 
 # (name, description, price_uah, stock)
 DEMO_PRODUCTS = {
-    "⚡️ Підписки & Premium": [
+    "Підписки & Premium": [
         (
-            "⭐️ Telegram Premium (12 міс)",
+            "Telegram Premium (12 міс)",
             "Ліцензійна підписка Telegram Premium на 1 рік / 1 Year.\n\n"
             "• Активація без входу в акаунт (Gift-посилання / по @username)\n"
             "• Ліміти x2 (файли до 4 ГБ, 1000 каналів, 30 папок)\n"
@@ -32,7 +32,7 @@ DEMO_PRODUCTS = {
             50,
         ),
         (
-            "⭐️ Telegram Premium (3 міс)",
+            "Telegram Premium (3 міс)",
             "Ліцензійна підписка Telegram Premium на 3 місяці.\n\n"
             "• Моментальна активація за юзернеймом\n"
             "• Усі переваги Telegram Premium без переплат",
@@ -40,7 +40,7 @@ DEMO_PRODUCTS = {
             35,
         ),
         (
-            "🔮 Discord Nitro (1 міс + 2 бусти)",
+            "Discord Nitro (1 міс + 2 бусти)",
             "Повна підписка Discord Nitro на 30 днів.\n\n"
             "• 2 безкоштовні бусти для вашого сервера\n"
             "• Користувацькі емодзі та стікери на будь-яких серверах\n"
@@ -50,7 +50,7 @@ DEMO_PRODUCTS = {
             40,
         ),
         (
-            "🎧 Spotify Premium (12 міс)",
+            "Spotify Premium (12 міс)",
             "Індивідуальна підписка Spotify на 12 місяців на ваш особистий акаунт.\n\n"
             "• Преміальна якість звуку (Very High 320 kbps)\n"
             "• Повна відсутність аудіо- та банерної реклами\n"
@@ -59,7 +59,7 @@ DEMO_PRODUCTS = {
             25,
         ),
         (
-            "🎬 YouTube Premium (12 міс)",
+            "YouTube Premium (12 міс)",
             "YouTube Premium + YouTube Music на 1 рік без реклами.\n\n"
             "• Фонове відтворення на мобільних пристроях\n"
             "• Завантаження відео у максимальній якості офлайн\n"
@@ -68,9 +68,9 @@ DEMO_PRODUCTS = {
             30,
         ),
     ],
-    "🤖 AI & Нейромережі": [
+    "AI & Нейромережі": [
         (
-            "🧠 ChatGPT Plus (GPT-4o & o1) — 1 міс",
+            "ChatGPT Plus (GPT-4o & o1) • 1 міс",
             "Персональна підписка ChatGPT Plus від OpenAI на 30 днів.\n\n"
             "• Доступ до флагманських моделей GPT-4o, GPT-4, o1-preview\n"
             "• Генерація фотографій та ілюстрацій через DALL-E 3\n"
@@ -80,7 +80,7 @@ DEMO_PRODUCTS = {
             30,
         ),
         (
-            "🎨 Midjourney Pro (1 міс)",
+            "Midjourney Pro (1 міс)",
             "Офіційна підписка Midjourney Standard/Pro для генерації арту.\n\n"
             "• Необмежена генерація у режимі Relax Mode\n"
             "• 15-30 годин швидкої Fast GPU генерації\n"
@@ -89,7 +89,7 @@ DEMO_PRODUCTS = {
             15,
         ),
         (
-            "⚡️ Claude Pro / Anthropic (1 міс)",
+            "Claude Pro / Anthropic (1 міс)",
             "Підписка Claude Pro з доступом до Claude 3.5 Sonnet & Opus.\n\n"
             "• Збільшений контекст (до 200k токенів)\n"
             "• Інтелектуальний аналіз великих кодових баз та документів\n"
@@ -98,9 +98,9 @@ DEMO_PRODUCTS = {
             20,
         ),
     ],
-    "💻 Софт & Ліцензії": [
+    "Софт & Ліцензії": [
         (
-            "🪟 Windows 11 Pro OEM Key",
+            "Windows 11 Pro OEM Key",
             "Оригінальний цифровий ліцензійний ключ активації Windows 11 Pro.\n\n"
             "• Довічна прив'язка до материнської плати ПК\n"
             "• Офіційна онлайн-активація через сервери Microsoft\n"
@@ -109,7 +109,7 @@ DEMO_PRODUCTS = {
             100,
         ),
         (
-            "📊 Microsoft Office 365 (1 рік)",
+            "Microsoft Office 365 (1 рік)",
             "Ліцензія Office 365 (Word, Excel, PowerPoint, Outlook) + 1 TB OneDrive.\n\n"
             "• Підключення до 5 пристроїв одночасно (PC, Mac, iPhone, Android)\n"
             "• Повні останні оновлення всіх застосунків пакета",
@@ -117,7 +117,7 @@ DEMO_PRODUCTS = {
             45,
         ),
         (
-            "🎨 JetBrains All Products Pack (1 рік)",
+            "JetBrains All Products Pack (1 рік)",
             "Офіційна підписка на всі IDE від JetBrains на 1 рік.\n\n"
             "• IntelliJ IDEA Ultimate, PyCharm Pro, WebStorm, GoLand, CLion, RustRover\n"
             "• Підключення через офіційний JetBrains Account",
@@ -125,9 +125,9 @@ DEMO_PRODUCTS = {
             12,
         ),
     ],
-    "🛡 Безпека & VPN": [
+    "Безпека & VPN": [
         (
-            "🛡 Shadowsocks Private VPN (3 міс)",
+            "Shadowsocks Private VPN (3 міс)",
             "Надшвидкий приватний VPN за протоколом Shadowsocks / Vless.\n\n"
             "• Обхід будь-яких блокувань та DPI\n"
             "• Швидкість до 1 Гбіт/с, локації: Франкфурт, Варшава, Амстердам\n"
@@ -136,7 +136,7 @@ DEMO_PRODUCTS = {
             80,
         ),
         (
-            "⚡️ WireGuard Dedicated VPN (1 рік)",
+            "WireGuard Dedicated VPN (1 рік)",
             "Виділений персональний WireGuard сервер на 12 місяців.\n\n"
             "• Персональна статична IPv4-адреса\n"
             "• Повний No-Logs (відсутність логів та відстеження)\n"
@@ -145,7 +145,7 @@ DEMO_PRODUCTS = {
             40,
         ),
         (
-            "🔒 AdGuard Premium (Вічна ліцензія)",
+            "AdGuard Premium (Вічна ліцензія)",
             "Оригінальний ключ AdGuard Premium для блокування реклами та трекерів.\n\n"
             "• Блокування будь-якої реклами, спливаючих вікон та фішингу\n"
             "• Безстрокова ліцензія на 3 пристрої",
@@ -153,9 +153,9 @@ DEMO_PRODUCTS = {
             35,
         ),
     ],
-    "🕹 Ігри & Steam": [
+    "Ігри & Steam": [
         (
-            "🎮 Steam Gift Card 500 ₴",
+            "Steam Gift Card 500 ₴",
             "Офіційна карта поповнення гаманця Steam на 500 UAH.\n\n"
             "• Моментальна видача 16-значного цифрового пін-коду\n"
             "• Для українських та європейських регіонів Steam",
@@ -163,7 +163,7 @@ DEMO_PRODUCTS = {
             60,
         ),
         (
-            "🎮 Steam Gift Card $25 USD",
+            "Steam Gift Card $25 USD",
             "Карта поповнення гаманця Steam на $25 USD.\n\n"
             "• Пряме зарахування на баланс акаунта\n"
             "• Моментальна автоматична видача",
@@ -171,7 +171,7 @@ DEMO_PRODUCTS = {
             45,
         ),
         (
-            "🕹 Cyberpunk 2077: Phantom Liberty",
+            "Cyberpunk 2077: Phantom Liberty",
             "Ліцензійний ключ активації доповнення Phantom Liberty у Steam.\n\n"
             "• Глобальний цифровий ключ (Global / Region Free)\n"
             "• Активація безпосередньо у вашому клієнті Steam",
@@ -191,6 +191,17 @@ DEMO_PROMOCODES = [
 async def seed_demo_data(session: AsyncSession) -> None:
     """Populate database with bilingual categories and items priced in UAH / USD."""
     existing_categories = await categories_service.get_all(session)
+    for cat in existing_categories:
+        clean = cat.name.lstrip("⚡️💎🧠🤖🔑💻🌐🛡🎮🕹 ").strip()
+        if clean != cat.name:
+            cat.name = clean
+
+    all_prods = await products_service.list_all(session)
+    for p in all_prods:
+        clean = p.name.lstrip("⭐️⭐🔮🎧🎬🧠🎨⚡️🪟📊🛡🔒🎮🕹 ").replace("—", "•").strip()
+        if clean != p.name:
+            p.name = clean
+
     existing_by_name = {c.name: c for c in existing_categories}
 
     for cat_name, emoji in DEMO_CATEGORIES:

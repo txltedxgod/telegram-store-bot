@@ -9,6 +9,7 @@ from bot.database.models import User
 from bot.keyboards.callbacks import CartCB, MenuCB
 from bot.keyboards.user import back_home, cart_kb
 from bot.services import cart as cart_service
+from bot.utils.emojis import EMOJI_CART, ce
 from bot.utils.texts import cart_text, get_lang
 from bot.utils.ui import render_menu_step
 
@@ -19,10 +20,11 @@ async def _render_cart(query: CallbackQuery, session: AsyncSession, user: User) 
     lang = get_lang(user)
     items = await cart_service.get_items(session, user.id)
     if not items:
+        icon_cart = ce(EMOJI_CART, "🧺")
         empty_text = (
-            "🧺 <b>Your shopping cart is empty</b>\n\nBrowse the catalog to add items."
+            f"{icon_cart} <b>Your shopping cart is empty</b>\n\nBrowse the catalog to add items."
             if lang == "en"
-            else "🧺 <b>Ваш кошик порожній</b>\n\nДодайте товари з каталогу."
+            else f"{icon_cart} <b>Ваш кошик порожній</b>\n\nДодайте товари з каталогу."
         )
         await render_menu_step(query, empty_text, reply_markup=back_home(lang))
         return

@@ -79,3 +79,19 @@ def test_products_keyboard():
     assert "Shadowsocks" in kb.inline_keyboard[0][0].text
     assert "WireGuard" in kb.inline_keyboard[1][0].text
     assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
+
+
+def test_orders_keyboard():
+    from bot.database.models import Order, OrderStatus
+    from bot.keyboards.user import orders_kb
+    order = Order(
+        id=7,
+        user_id=1,
+        total_price=Decimal("500.00"),
+        status=OrderStatus.pending,
+    )
+    kb = orders_kb([order], lang="uk")
+    assert kb is not None
+    assert "#7 • Очікує оплати" in kb.inline_keyboard[0][0].text
+    assert kb.inline_keyboard[0][0].icon_custom_emoji_id is not None
+

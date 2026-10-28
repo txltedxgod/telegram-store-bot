@@ -32,7 +32,7 @@ async def get_by_name_and_category(
             Product.name == name, Product.category_id == category_id
         )
     )
-    return result.scalar_one_or_none()
+    return result.scalars().first()
 
 
 async def list_all(session: AsyncSession) -> list[Product]:

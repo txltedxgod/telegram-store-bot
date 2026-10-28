@@ -13,7 +13,7 @@ from bot.database.models import User
 from bot.keyboards.callbacks import LanguageCB, MenuCB
 from bot.keyboards.user import back_home, language_selection_kb, main_menu
 from bot.services import users as users_service
-from bot.utils.emojis import EMOJI_GIFT, ce
+from bot.utils.emojis import EMOJI_CHAIN, EMOJI_GIFT, ce
 from bot.utils.logger import get_logger
 from bot.utils.texts import (
     get_lang,
@@ -175,6 +175,7 @@ async def referral_menu_callback(query: CallbackQuery, user: User) -> None:
     me = await query.bot.get_me()
     link = f"https://t.me/{me.username}?start=ref_{user.id}"
     icon_gift = ce(EMOJI_GIFT, "🎁")
+    icon_link = ce(EMOJI_CHAIN, "🔗")
     bonus = money(settings.referral_bonus)
 
     if lang == "en":
@@ -182,7 +183,7 @@ async def referral_menu_callback(query: CallbackQuery, user: User) -> None:
             f"{icon_gift} <b>SEO Store Referral Program</b>\n\n"
             f"Invite friends and earn <b>{bonus}</b> to your balance "
             f"for every registered customer!\n\n"
-            f"🔗 Your unique referral link:\n"
+            f"{icon_link} Your unique referral link:\n"
             f"<code>{link}</code>\n\n"
             f"<i>Bonus is credited immediately upon their first /start.</i>"
         )
@@ -191,7 +192,7 @@ async def referral_menu_callback(query: CallbackQuery, user: User) -> None:
             f"{icon_gift} <b>Реферальна програма SEO Store</b>\n\n"
             f"Запрошуйте друзів та отримуйте по <b>{bonus}</b> "
             f"на баланс за кожного зареєстрованого покупця!\n\n"
-            f"🔗 Ваше унікальне посилання для запрошень:\n"
+            f"{icon_link} Ваше унікальне посилання для запрошень:\n"
             f"<code>{link}</code>\n\n"
             f"<i>Бонус нараховується автоматично після першого переходу.</i>"
         )
