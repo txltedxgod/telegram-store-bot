@@ -61,7 +61,7 @@ def status_label(status: OrderStatus, lang: str = "uk") -> str:
 
 def fmt_date(value: datetime | None) -> str:
     if not value:
-        return "—"
+        return "-"
     return value.strftime("%d.%m.%Y %H:%M")
 
 
@@ -116,7 +116,7 @@ def product_card(product: Product, user: User | None = None) -> str:
             f"💰 Price: <b>{money(product.price)}</b>\n"
             f"📦 {stock_line}\n\n"
             f"<b>Description:</b>\n"
-            f"{product.description or '—'}\n\n"
+            f"{product.description or '-'}\n\n"
             f"{icon_lock} <i>Quality guaranteed with automated instant delivery</i>"
         )
 
@@ -130,7 +130,7 @@ def product_card(product: Product, user: User | None = None) -> str:
         f"💰 Вартість: <b>{money(product.price)}</b>\n"
         f"📦 {stock_line}\n\n"
         f"<b>Опис товару:</b>\n"
-        f"{product.description or '—'}\n\n"
+        f"{product.description or '-'}\n\n"
         f"{icon_lock} <i>Гарантія якості та автоматична видача</i>"
     )
 
@@ -161,7 +161,7 @@ def cart_text(items: Iterable[CartItem], total: Decimal, user: User | None = Non
 
 def profile_text(user: User, orders_count: int, total_spent: Decimal) -> str:
     lang = get_lang(user)
-    username = f"@{user.username}" if user.username else "—"
+    username = f"@{user.username}" if user.username else "-"
     icon_profile = ce(EMOJI_PROFILE, "👤")
     icon_coin = ce(EMOJI_COIN, "🪙")
 
@@ -201,7 +201,7 @@ def order_card(order: Order, user: User | None = None) -> str:
         ]
         for item in order.items:
             lines.append(
-                f"• {item.product_name} ×{item.quantity} — <b>{money(item.subtotal)}</b>"
+                f"• {item.product_name} ×{item.quantity} • <b>{money(item.subtotal)}</b>"
             )
         if order.discount and Decimal(order.discount) > 0:
             lines.append(f"\n🏷 Promo code discount: −{money(order.discount)}")
@@ -221,7 +221,7 @@ def order_card(order: Order, user: User | None = None) -> str:
     ]
     for item in order.items:
         lines.append(
-            f"• {item.product_name} ×{item.quantity} — <b>{money(item.subtotal)}</b>"
+            f"• {item.product_name} ×{item.quantity} • <b>{money(item.subtotal)}</b>"
         )
     if order.discount and Decimal(order.discount) > 0:
         lines.append(f"\n🏷 Знижка за промокодом: −{money(order.discount)}")

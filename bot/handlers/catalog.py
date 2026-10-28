@@ -47,6 +47,10 @@ async def _show_product(
 
 @router.callback_query(MenuCB.filter(F.action == "catalog"))
 async def show_catalog(query: CallbackQuery, session: AsyncSession, user: User) -> None:
+    try:
+        await query.answer()
+    except Exception:
+        pass
     lang = get_lang(user)
     categories = await categories_service.list_categories(session)
     if not categories:
@@ -72,7 +76,6 @@ async def show_catalog(query: CallbackQuery, session: AsyncSession, user: User) 
         caption,
         reply_markup=categories_kb(categories, lang=lang),
     )
-    await query.answer()
 
 
 @router.callback_query(CategoryCB.filter())

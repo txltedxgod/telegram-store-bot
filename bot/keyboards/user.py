@@ -188,7 +188,7 @@ def products_kb(products: list[Product], category_id: int, lang: str = "uk") -> 
     for product in products:
         clean_name = product.name.lstrip("⭐️🔮🎧🎬🧠🎨⚡️🪟📊🛡🔒🎮🕹 ").strip()
         kb.button(
-            text=f"{clean_name} — {money(product.price)}",
+            text=f"{clean_name} • {money(product.price)}",
             callback_data=ProductCB(
                 action="view", product_id=product.id, category_id=category_id
             ),
@@ -313,8 +313,9 @@ def payment_methods_kb(lang: str = "uk") -> InlineKeyboardMarkup:
 def orders_kb(orders: list[Order], lang: str = "uk") -> InlineKeyboardMarkup:
     kb = InlineKeyboardBuilder()
     for order in orders:
+        label = status_label(order.status, lang).lstrip("⏳💳✅❌ ")
         kb.button(
-            text=f"#{order.id} — {status_label(order.status, lang)}",
+            text=f"#{order.id} • {label}",
             callback_data=OrderCB(order_id=order.id),
             icon_custom_emoji_id=EMOJI_ORDERS,
         )
@@ -361,7 +362,7 @@ def favorites_kb(favorites: list[Favorite], lang: str = "uk") -> InlineKeyboardM
     for fav in favorites:
         clean_name = fav.product.name.lstrip("⭐️🔮🎧🎬🧠🎨⚡️🪟📊🛡🔒🎮🕹 ").strip()
         kb.button(
-            text=f"{clean_name} — {money(fav.product.price)}",
+            text=f"{clean_name} • {money(fav.product.price)}",
             callback_data=ProductCB(
                 action="view",
                 product_id=fav.product_id,

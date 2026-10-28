@@ -11,6 +11,11 @@ async def render_menu_step(
     reply_markup: InlineKeyboardMarkup | None = None,
 ) -> None:
     """Transitions from photo/GIF banners to text views without Telegram API errors."""
+    try:
+        await query.answer()
+    except Exception:
+        pass
+
     msg = query.message
     if not msg:
         return
@@ -43,17 +48,22 @@ async def render_animation_step(
     reply_markup: InlineKeyboardMarkup | None = None,
 ) -> None:
     """Renders or replaces message with an animated GIF/video, using file_id cache for speed."""
+    try:
+        await query.answer()
+    except Exception:
+        pass
+
     msg = query.message
     if not msg:
         return
+
+    path_key = str(gif_path)
+    cached_id = _MEDIA_CACHE.get(path_key)
 
     try:
         await msg.delete()
     except Exception:
         pass
-
-    path_key = str(gif_path)
-    cached_id = _MEDIA_CACHE.get(path_key)
 
     if cached_id:
         try:

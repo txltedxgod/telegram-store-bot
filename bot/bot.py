@@ -23,13 +23,41 @@ logger = get_logger("bot.main")
 
 
 async def set_commands(bot: Bot) -> None:
+    # Commands without emojis (clean plain text as requested)
     await bot.set_my_commands(
         [
-            BotCommand(command="start", description="🚀 Запустить магазин"),
-            BotCommand(command="menu", description="📱 Главное меню"),
-            BotCommand(command="ref", description="🎁 Реферальная ссылка"),
-            BotCommand(command="admin", description="⚙️ Админ-панель"),
+            BotCommand(command="start", description="Запустити магазин"),
+            BotCommand(command="menu", description="Головне меню"),
+            BotCommand(command="ref", description="Реферальне посилання"),
+            BotCommand(command="admin", description="Панель адміністратора"),
         ]
+    )
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Запустити магазин"),
+            BotCommand(command="menu", description="Головне меню"),
+            BotCommand(command="ref", description="Реферальне посилання"),
+            BotCommand(command="admin", description="Панель адміністратора"),
+        ],
+        language_code="uk",
+    )
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Start store"),
+            BotCommand(command="menu", description="Main menu"),
+            BotCommand(command="ref", description="Referral link"),
+            BotCommand(command="admin", description="Admin panel"),
+        ],
+        language_code="en",
+    )
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Запустить магазин"),
+            BotCommand(command="menu", description="Главное меню"),
+            BotCommand(command="ref", description="Реферальная ссылка"),
+            BotCommand(command="admin", description="Админ-панель"),
+        ],
+        language_code="ru",
     )
 
 

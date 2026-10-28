@@ -37,20 +37,20 @@ async def start_checkout(
         await query.answer(empty, show_alert=True)
         return
 
+    await query.answer()
     await state.set_state(CheckoutSG.payment_method)
     if lang == "en":
         text = (
-            "💳 <b>Checkout — Step 1/3</b>\n\n"
+            "💳 <b>Checkout • Step 1/3</b>\n\n"
             "Please select your payment method:"
         )
     else:
         text = (
-            "💳 <b>Оформлення замовлення — Крок 1/3</b>\n\n"
+            "💳 <b>Оформлення замовлення • Крок 1/3</b>\n\n"
             "Оберіть зручний спосіб оплати:"
         )
 
     await query.message.edit_text(text, reply_markup=payment_methods_kb(lang), parse_mode="HTML")
-    await query.answer()
 
 
 @router.callback_query(CheckoutCB.filter(F.action == "pay_method"), CheckoutSG.payment_method)
@@ -62,28 +62,28 @@ async def select_payment_method(
     await state.update_data(payment_method=method)
     await state.set_state(CheckoutSG.contact)
 
+    await query.answer()
     if lang == "en":
         text = (
-            "📝 <b>Checkout — Step 2/3</b>\n\n"
+            "📝 <b>Checkout • Step 2/3</b>\n\n"
             "Enter your Telegram (@username) or contact info for automated delivery:"
         )
     else:
         text = (
-            "📝 <b>Оформлення замовлення — Крок 2/3</b>\n\n"
+            "📝 <b>Оформлення замовлення • Крок 2/3</b>\n\n"
             "Введіть ваш Telegram (@username) або контакт для автоматичної видачі товару:"
         )
 
     await query.message.edit_text(text, reply_markup=checkout_cancel_kb(lang), parse_mode="HTML")
-    await query.answer()
 
 
 @router.callback_query(CheckoutCB.filter(F.action == "cancel"))
 async def cancel_checkout(query: CallbackQuery, state: FSMContext, user: User) -> None:
+    await query.answer()
     lang = get_lang(user)
     await state.clear()
     text = "Checkout cancelled." if lang == "en" else "Оформлення скасовано."
     await query.message.edit_text(text, reply_markup=back_home(lang), parse_mode="HTML")
-    await query.answer()
 
 
 @router.message(CheckoutSG.contact, F.text)
@@ -94,12 +94,12 @@ async def checkout_contact(message: Message, state: FSMContext, user: User) -> N
 
     if lang == "en":
         text = (
-            "💬 <b>Checkout — Step 3/3</b>\n\n"
+            "💬 <b>Checkout • Step 3/3</b>\n\n"
             "Add a note/comment to your order, or press skip:"
         )
     else:
         text = (
-            "💬 <b>Оформлення замовлення — Крок 3/3</b>\n\n"
+            "💬 <b>Оформлення замовлення • Крок 3/3</b>\n\n"
             "Додайте коментар або примітку до замовлення (або пропустіть крок):"
         )
 
